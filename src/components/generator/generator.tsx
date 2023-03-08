@@ -1,4 +1,14 @@
-import { Flex, Loader, Paper, Stack, Text } from '@mantine/core';
+import {
+  Box,
+  Divider,
+  Flex,
+  Loader,
+  Paper,
+  Stack,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useGenerator } from '../../hooks/useGenerator';
 import { Context } from './context';
@@ -12,6 +22,9 @@ interface GeneratorProps {
 }
 
 export const Generator = ({ begin, end, setRange }: GeneratorProps) => {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+
   const [extend, setExtend] = useState(0);
   const [offset, setOffset] = useState(0);
   const [resolution, setResolution] = useState(360);
@@ -44,37 +57,61 @@ export const Generator = ({ begin, end, setRange }: GeneratorProps) => {
   }
 
   return (
-    <Paper shadow="xl" p="xl" m="xl" maw="800px" mx="auto">
-      <Text fz="xl">
-        Season {context.meta.season_number}, Episode{' '}
-        {context.meta.episode_in_season}: {context.meta.episode_title}
-      </Text>
-      <Flex my="lg" mah={700}>
-        <Stack>
-          <Viewer loading={loading} snippet={snippet} filetype={filetype} />
-          <Controls
-            {...{
-              filetype,
-              setFiletype,
-              subtitles,
-              setSubtitles,
-              resolution,
-              setResolution,
-              extend,
-              setExtend,
-              offset,
-              setOffset,
-            }}
-          />
-        </Stack>
-        <Context
-          begin={begin}
-          end={end}
-          context={context}
-          setRange={setRange}
-        />
-      </Flex>
-      {!!responseTime && <Text fz="sm">Generated in {responseTime}ms</Text>}
-    </Paper>
+    <Box mx="auto" maw="800px">
+      <Paper shadow="xl" p="xl" m="xl" mx="lg">
+        <Text fz="xl">
+          Season {context.meta.season_number}, Episode{' '}
+          {context.meta.episode_in_season}: {context.meta.episode_title}
+        </Text>
+        <Flex
+          my="lg"
+          mah={isMobile ? undefined : 700}
+          direction={isMobile ? 'column' : undefined}
+        >
+          <Stack>
+            <Viewer loading={loading} snippet={snippet} filetype={filetype} />
+            {isMobile && (
+              <>
+                <Divider my="xl" />
+                <Context
+                  begin={begin}
+                  end={end}
+                  context={context}
+                  setRange={setRange}
+                />
+                <Divider my="xl" />
+              </>
+            )}
+            <Controls
+              {...{
+                filetype,
+                setFiletype,
+                subtitles,
+                setSubtitles,
+                resolution,
+                setResolution,
+                extend,
+                setExtend,
+                offset,
+                setOffset,
+              }}
+            />
+          </Stack>
+          {!isMobile && (
+            <Context
+              begin={begin}
+              end={end}
+              context={context}
+              setRange={setRange}
+            />
+          )}
+        </Flex>
+        {!!responseTime && (
+          <Text fz="sm" color="dimmed">
+            Generated in {responseTime}ms
+          </Text>
+        )}
+      </Paper>
+    </Box>
   );
 };

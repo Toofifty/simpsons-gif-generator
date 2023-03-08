@@ -6,7 +6,11 @@ interface QuoteSearchOptions {
 }
 
 export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
-  const normalized = term.replaceAll(/[\W\s]/g, '');
+  const normalized = term
+    .replaceAll('...', '…')
+    .replaceAll(/[^a-zA-Z\…]/g, '')
+    .replaceAll('…', '[...]');
+
   const [results, setResults] = useState<SearchQuoteResponseData>();
   const [loading, setLoading] = useState(false);
 

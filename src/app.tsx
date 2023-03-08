@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
-  Box,
   ColorScheme,
   ColorSchemeProvider,
-  Divider,
   MantineProvider,
-  Text,
 } from '@mantine/core';
 import { Shell } from './components/shell';
-import { Generator } from './components/generator/generator';
-import { Search } from './components/search/search';
-import { randomQuote } from './random-quote';
-import { Stats } from './components/stats';
+import { Root } from './root';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
@@ -42,29 +36,13 @@ export const App = () => {
               backgroundColor:
                 theme.colorScheme === 'dark'
                   ? theme.colors.dark[5]
-                  : theme.colors.gray[1],
+                  : theme.colors.gray[3],
             },
           }),
         }}
       >
         <Shell>
-          <Search setRange={(begin, end) => setRange([begin, end])} />
-          {range ? (
-            <Generator
-              begin={range[0]}
-              end={range[1]}
-              setRange={(begin, end) => setRange([begin, end])}
-            />
-          ) : (
-            <Box mx="auto" m="xl" maw={600} ta="center">
-              <Text color={colorScheme === 'dark' ? 'dark.2' : "gray"}>Start searching for a quote, like:</Text>
-              <Text mt="lg" size="lg" italic>
-                {randomQuote()}
-              </Text>
-              <Divider my="xl" />
-              <Stats />
-            </Box>
-          )}
+          <Root range={range} setRange={setRange} />
         </Shell>
       </MantineProvider>
     </ColorSchemeProvider>

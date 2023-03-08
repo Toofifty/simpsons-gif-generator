@@ -18,7 +18,6 @@ const RESOLUTION_MARKS = [
   { value: 240, label: '240p' },
   { value: 360, label: '360p' },
   { value: 480, label: '480p' },
-  { value: 720, label: '720p' },
 ];
 
 interface ControlsProps {
@@ -121,7 +120,7 @@ export const Controls = ({
         <Slider
           label={(val) => `${val}p`}
           step={120}
-          min={240}
+          min={120}
           max={720}
           marks={RESOLUTION_MARKS}
           value={resolution ?? 240}

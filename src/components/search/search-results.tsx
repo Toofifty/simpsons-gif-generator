@@ -1,11 +1,12 @@
 import {
+  Divider,
   Flex,
   Stack,
   Text,
   UnstyledButton,
   useMantineTheme,
 } from '@mantine/core';
-import { ReactNode } from 'react';
+import { useMediaQuery } from '@mantine/hooks';
 import { MetaBundle, SearchQuoteResponseData, Subtitle } from '../../api';
 
 interface SearchResultProps {
@@ -16,10 +17,12 @@ interface SearchResultProps {
     after: Subtitle[];
   };
   setRange: (begin: number, end: number) => void;
+  first?: boolean;
 }
 
-const SearchResult = ({ result, setRange }: SearchResultProps) => {
+const SearchResult = ({ result, setRange, first }: SearchResultProps) => {
   const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
   const before = result.before.map((line) => (
     <Text key={line.id} color="dimmed">
@@ -47,35 +50,47 @@ const SearchResult = ({ result, setRange }: SearchResultProps) => {
   ).padStart(2, '0')}`;
 
   return (
-    <UnstyledButton
-      miw={800}
-      px="lg"
-      py="sm"
-      sx={(theme) => ({
-        borderRadius: theme.radius.sm,
-        ':hover': {
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[5]
-              : theme.colors.gray[0],
-        },
-      })}
-      onClick={() => {
-        setRange(result.lines[0].id, result.lines[result.lines.length - 1].id);
-      }}
-    >
-      <Flex align="center" justify="space-between">
-        <Text>
-          {before}
-          {quote}
-          {after}
-        </Text>
-        <Text color="dimmed" ta="right">
-          <Text>{episode}</Text>
-          <Text>{result.meta.episode_title}</Text>
-        </Text>
-      </Flex>
-    </UnstyledButton>
+    <>
+      {!first && isMobile && <Divider />}
+      <UnstyledButton
+        miw={isMobile ? 200 : 'calc(800px - 4rem)'}
+        maw={isMobile ? 'calc(100vw - 4rem)' : 'calc(800px - 4rem)'}
+        px="lg"
+        py="sm"
+        sx={(theme) => ({
+          borderRadius: theme.radius.sm,
+          ':hover': {
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[5]
+                : theme.colors.gray[0],
+          },
+        })}
+        onClick={() => {
+          setRange(
+            result.lines[0].id,
+            result.lines[result.lines.length - 1].id
+          );
+        }}
+      >
+        <Flex
+          align={isMobile ? 'flex-start' : 'center'}
+          justify="space-between"
+          gap="lg"
+          direction={isMobile ? 'column' : undefined}
+        >
+          <Text>
+            {before}
+            {quote}
+            {after}
+          </Text>
+          <Text color="dimmed" ta={isMobile ? 'left' : 'right'}>
+            <Text>{episode}</Text>
+            <Text maw={300}>{result.meta.episode_title}</Text>
+          </Text>
+        </Flex>
+      </UnstyledButton>
+    </>
   );
 };
 
@@ -93,46 +108,35 @@ export const SearchResults = ({
   setRange,
 }: SearchResultsProps) => {
   if (loading) {
-    return (
-      <Text miw={560} ta="center">
-        Loading...
-      </Text>
-    );
-  }
-
-  if (term.length === 0 && results === undefined) {
-    return (
-      <Text miw={560} ta="center">
-        Begin typing to search quotes
-      </Text>
-    );
+    return <Text ta="center">Loading...</Text>;
   }
 
   if (results === undefined) {
-    return (
-      <Text miw={560} ta="center">
-        Term is too short
-      </Text>
-    );
+    return <Text ta="center">Term is too short</Text>;
   }
 
   if (results.matches.length === 0) {
-    return (
-      <Text miw={560} ta="center">
-        No results found
-      </Text>
-    );
+    return <Text ta="center">No results found</Text>;
   }
 
   return (
     <Stack>
-      {results.matches.slice(0, 10).map((result) => (
+      {results.matches.slice(0, 5).map((result, i) => (
         <SearchResult
+          first={i === 0}
           key={result.lines[0].id}
           result={result}
           setRange={setRange}
         />
       ))}
+      {results.matches.length > 5 && (
+        <>
+          <Divider />
+          <Text ta="center" color="dimmed">
+            {results.matches.length - 5} more results
+          </Text>
+        </>
+      )}
     </Stack>
   );
 };

@@ -26,6 +26,7 @@ const Hitbox = forwardRef(
         width: '1.5rem',
         height: '100%',
         left: '0.125rem',
+        cursor: 'pointer',
       })}
     >
       {children}

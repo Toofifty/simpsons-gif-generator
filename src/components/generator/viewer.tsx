@@ -7,6 +7,7 @@ import {
   Skeleton,
   Stack,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconCopy, IconDownload } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -19,6 +20,7 @@ interface ViewerProps {
 }
 
 export const Viewer = ({ loading, snippet, filetype }: ViewerProps) => {
+  const theme = useMantineTheme();
   const [copied, setCopied] = useState(false);
 
   return (
@@ -29,7 +31,14 @@ export const Viewer = ({ loading, snippet, filetype }: ViewerProps) => {
         ) : (
           <>
             {filetype === 'mp4' && (
-              <video height="270" width="360" controls loop autoPlay>
+              <video
+                height="270"
+                width="360"
+                controls
+                loop
+                autoPlay
+                style={{ borderRadius: theme.radius.sm }}
+              >
                 <source src={snippet.url} type="video/mp4" />
                 Unable to load video
               </video>
