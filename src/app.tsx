@@ -14,7 +14,7 @@ import { randomQuote } from './random-quote';
 import { Stats } from './components/stats';
 
 export const App = () => {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
@@ -57,7 +57,7 @@ export const App = () => {
             />
           ) : (
             <Box mx="auto" m="xl" maw={600} ta="center">
-              <Text color="gray">Start searching for a quote, like:</Text>
+              <Text color={colorScheme === 'dark' ? 'dark.2' : "gray"}>Start searching for a quote, like:</Text>
               <Text mt="lg" size="lg" italic>
                 {randomQuote()}
               </Text>
