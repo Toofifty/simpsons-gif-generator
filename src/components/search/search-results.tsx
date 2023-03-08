@@ -1,4 +1,10 @@
-import { Flex, Stack, Text, UnstyledButton } from '@mantine/core';
+import {
+  Flex,
+  Stack,
+  Text,
+  UnstyledButton,
+  useMantineTheme,
+} from '@mantine/core';
 import { ReactNode } from 'react';
 import { MetaBundle, SearchQuoteResponseData, Subtitle } from '../../api';
 
@@ -13,19 +19,27 @@ interface SearchResultProps {
 }
 
 const SearchResult = ({ result, setRange }: SearchResultProps) => {
+  const theme = useMantineTheme();
+
   const before = result.before.map((line) => (
-    <Text key={line.id} color="gray">
+    <Text key={line.id} color="dimmed">
       {line.text}
     </Text>
   ));
+
   const after = result.after.map((line) => (
-    <Text key={line.id} color="gray">
+    <Text key={line.id} color="dimmed">
       {line.text}
     </Text>
   ));
 
   const quote = result.lines.map((line) => (
-    <Text key={line.id}>{line.text}</Text>
+    <Text
+      key={line.id}
+      color={theme.colorScheme === 'dark' ? 'white' : undefined}
+    >
+      {line.text}
+    </Text>
   ));
 
   const episode = `S${(result.meta.season_number + '').padStart(2, '0')}E${(
@@ -42,7 +56,7 @@ const SearchResult = ({ result, setRange }: SearchResultProps) => {
         ':hover': {
           backgroundColor:
             theme.colorScheme === 'dark'
-              ? theme.colors.dark[6]
+              ? theme.colors.dark[5]
               : theme.colors.gray[0],
         },
       })}
@@ -56,7 +70,7 @@ const SearchResult = ({ result, setRange }: SearchResultProps) => {
           {quote}
           {after}
         </Text>
-        <Text color="gray" ta="right">
+        <Text color="dimmed" ta="right">
           <Text>{episode}</Text>
           <Text>{result.meta.episode_title}</Text>
         </Text>

@@ -86,7 +86,7 @@ export const Controls = ({
           label={(value) => `${value > 0 ? '+' : ''}${value.toFixed(1)}s`}
           min={-10}
           max={10}
-          step={0.1}
+          step={0.5}
           marks={TIME_MARKS}
           value={offset ?? 0}
           onChange={setOffset}
@@ -104,7 +104,7 @@ export const Controls = ({
           label={(value) => `${value > 0 ? '+' : ''}${value.toFixed(1)}s`}
           min={-10}
           max={10}
-          step={0.1}
+          step={0.5}
           marks={TIME_MARKS}
           value={extend ?? 0}
           onChange={setExtend}

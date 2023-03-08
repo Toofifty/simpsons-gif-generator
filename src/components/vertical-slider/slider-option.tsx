@@ -1,7 +1,6 @@
 import { Box } from '@mantine/core';
 import { ReactNode, useState } from 'react';
 import { Bullet } from './bullet';
-import { useSliderContext } from './slider-context';
 
 interface BoxWithLineProps {
   active: boolean;
