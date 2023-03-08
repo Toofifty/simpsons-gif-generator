@@ -3,14 +3,15 @@ import {
   Box,
   ColorScheme,
   ColorSchemeProvider,
+  Divider,
   MantineProvider,
   Text,
 } from '@mantine/core';
 import { Shell } from './components/shell';
 import { Generator } from './components/generator/generator';
-import { useDebouncedState } from '@mantine/hooks';
 import { Search } from './components/search/search';
 import { randomQuote } from './random-quote';
+import { Stats } from './components/stats';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -55,13 +56,13 @@ export const App = () => {
               setRange={(begin, end) => setRange([begin, end])}
             />
           ) : (
-            <Box mx="auto" m="xl" maw={600}>
-              <Text ta="center" color="gray">
-                Start searching for a quote, like:
-              </Text>
-              <Text ta="center" mt="lg" size="lg" italic>
+            <Box mx="auto" m="xl" maw={600} ta="center">
+              <Text color="gray">Start searching for a quote, like:</Text>
+              <Text mt="lg" size="lg" italic>
                 {randomQuote()}
               </Text>
+              <Divider my="xl" />
+              <Stats />
             </Box>
           )}
         </Shell>
