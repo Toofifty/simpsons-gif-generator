@@ -1,5 +1,5 @@
 import { Flex, Loader, Paper, Stack, Text } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGenerator } from '../../hooks/useGenerator';
 import { Context } from './context';
 import { Controls } from './controls';
@@ -12,10 +12,10 @@ interface GeneratorProps {
 }
 
 export const Generator = ({ begin, end, setRange }: GeneratorProps) => {
-  const [extend, setExtend] = useState<number>();
-  const [offset, setOffset] = useState<number>();
-  const [resolution, setResolution] = useState<number>(360);
-  const [subtitles, setSubtitles] = useState<boolean>();
+  const [extend, setExtend] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [resolution, setResolution] = useState(360);
+  const [subtitles, setSubtitles] = useState(true);
   const [filetype, setFiletype] = useState<'mp4' | 'gif'>('gif');
 
   const { context, snippet, loading, responseTime } = useGenerator({
@@ -28,10 +28,17 @@ export const Generator = ({ begin, end, setRange }: GeneratorProps) => {
     filetype,
   });
 
+  useEffect(() => {
+    setExtend(0);
+    setOffset(0);
+  }, [begin, end]);
+
   if (!context || !snippet) {
     return (
-      <Paper>
-        <Loader />
+      <Paper shadow="xl" p="xl" m="xl" maw="800px" mx="auto">
+        <Flex justify="center">
+          <Loader color="gray" mx="auto" />
+        </Flex>
       </Paper>
     );
   }

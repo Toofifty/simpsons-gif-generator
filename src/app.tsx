@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  Box,
   ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
@@ -8,14 +9,21 @@ import {
 import { Shell } from './components/shell';
 import { Generator } from './components/generator/generator';
 import { useDebouncedState } from '@mantine/hooks';
+import { Search } from './components/search/search';
+import { randomQuote } from './random-quote';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
-  const [range, setRange] = useState([114906, 114917]);
-  const [debouncedRange, setDebouncedRange] = useDebouncedState(range, 500);
+  const [range, setRange] = useState<[number, number]>();
+
+  useEffect(() => {
+    if (range && range[0] > range[1]) {
+      setRange([range[1], range[0]]);
+    }
+  }, [range]);
 
   return (
     <ColorSchemeProvider
@@ -39,11 +47,23 @@ export const App = () => {
         }}
       >
         <Shell>
-          <Generator
-            begin={range[0]}
-            end={range[1]}
-            setRange={(begin, end) => setRange([begin, end])}
-          />
+          <Search setRange={(begin, end) => setRange([begin, end])} />
+          {range ? (
+            <Generator
+              begin={range[0]}
+              end={range[1]}
+              setRange={(begin, end) => setRange([begin, end])}
+            />
+          ) : (
+            <Box mx="auto" m="xl" maw={600}>
+              <Text ta="center" color="gray">
+                Start searching for a quote, like:
+              </Text>
+              <Text ta="center" mt="lg" size="lg" italic>
+                {randomQuote()}
+              </Text>
+            </Box>
+          )}
         </Shell>
       </MantineProvider>
     </ColorSchemeProvider>
