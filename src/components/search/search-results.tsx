@@ -8,6 +8,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { MetaBundle, SearchQuoteResponseData, Subtitle } from '../../api';
+import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { episodeIdentifier } from '../../utils';
 
 interface SearchResultProps {
@@ -17,11 +18,12 @@ interface SearchResultProps {
     lines: Subtitle[];
     after: Subtitle[];
   };
-  setRange: (begin: number, end: number) => void;
   first?: boolean;
 }
 
-const SearchResult = ({ result, setRange, first }: SearchResultProps) => {
+const SearchResult = ({ result, first }: SearchResultProps) => {
+  const { setRange } = useOptionsContext();
+
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
@@ -94,17 +96,10 @@ const SearchResult = ({ result, setRange, first }: SearchResultProps) => {
 
 interface SearchResultsProps {
   loading?: boolean;
-  term: string;
   results?: SearchQuoteResponseData;
-  setRange: (begin: number, end: number) => void;
 }
 
-export const SearchResults = ({
-  loading,
-  term,
-  results,
-  setRange,
-}: SearchResultsProps) => {
+export const SearchResults = ({ loading, results }: SearchResultsProps) => {
   if (loading) {
     return <Text ta="center">Loading...</Text>;
   }
@@ -124,7 +119,6 @@ export const SearchResults = ({
           first={i === 0}
           key={result.lines[0].id}
           result={result}
-          setRange={setRange}
         />
       ))}
       {results.matches.length > 5 && (

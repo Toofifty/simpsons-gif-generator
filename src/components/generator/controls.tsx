@@ -14,7 +14,7 @@ import {
 import { IconSettings, IconUpload } from '@tabler/icons-react';
 import { useState } from 'react';
 import { QuoteContextResponseData } from '../../api';
-import { useGenerationOptions } from '../../hooks/useGenerationOptions';
+import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { SubmitCorrection } from './submit-correction';
 
 const TIME_MARKS = [
@@ -39,7 +39,10 @@ export const Controls = ({ context }: ControlsProps) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [submittingCorrection, setSubmittingCorrection] = useState<number>();
 
-  const { options, setOption } = useGenerationOptions();
+  const {
+    options: { filetype = 'gif', ...options },
+    setOption,
+  } = useOptionsContext();
 
   return (
     <Stack>
@@ -49,8 +52,13 @@ export const Controls = ({ context }: ControlsProps) => {
         onClose={() => setSubmittingCorrection(undefined)}
       />
       <Flex justify="space-between" align="center">
+        <input
+          type="number"
+          value={options.extend ?? 0}
+          onChange={(e) => setOption('extend', Number(e.target.value))}
+        />
         <Text size="sm" tt="uppercase" fz="md">
-          {options.filetype} options
+          {filetype} options
         </Text>
         <Flex align="center" gap="sm">
           <Tooltip
@@ -67,14 +75,14 @@ export const Controls = ({ context }: ControlsProps) => {
           </Tooltip>
           <Button.Group>
             <Button
-              variant={options.filetype === 'mp4' ? 'filled' : 'default'}
+              variant={filetype === 'mp4' ? 'filled' : 'default'}
               size="sm"
               onClick={() => setOption('filetype', 'mp4')}
             >
               MP4
             </Button>
             <Button
-              variant={options.filetype === 'gif' ? 'filled' : 'default'}
+              variant={filetype === 'gif' ? 'filled' : 'default'}
               size="sm"
               onClick={() => setOption('filetype', 'gif')}
             >

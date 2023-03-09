@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { TransformMap, useQueryParams } from './useQueryParams';
 
 export interface GenerationOptions {
@@ -51,7 +51,7 @@ const validate = (options: GenerationOptions) => {
 
   // remove default values
   if (options.filetype === 'gif') delete out.filetype;
-  if (options.subtitles) delete out.subtitles;
+  if (!options.subtitles) delete out.subtitles;
   if (options.offset === 0) delete out.offset;
   if (options.extend === 0) delete out.extend;
 
@@ -64,27 +64,34 @@ export const useGenerationOptions = () => {
     transform
   );
 
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
+
   const setOption = useCallback(
-    <T extends keyof GenerationOptions>(key: T, value: GenerationOptions[T]) =>
-      setOptions((options) => {
-        const out = { ...options, [key]: value };
+    <T extends keyof GenerationOptions>(
+      key: T,
+      value: GenerationOptions[T]
+    ) => {
+      const out = { ...optionsRef.current, [key]: value };
 
-        // enable/disable subtitles if the user
-        // switches to gif/mp4 respectively
-        if (key === 'filetype') {
-          out.subtitles = value === 'gif';
-        }
+      // enable/disable subtitles if the user
+      // switches to gif/mp4 respectively
+      if (key === 'filetype') {
+        out.subtitles = value !== 'mp4';
+      }
 
-        return validate(out);
-      }),
-    []
+      console.log('new value is', validate(out));
+
+      return setOptions(validate(out));
+    },
+    [setOptions]
   );
 
   const setRange = useCallback(
     (begin: number, end: number) =>
       // reset all options when entire range changes
       setOptions(validate({ begin, end })),
-    []
+    [setOption]
   );
 
   return {

@@ -2,14 +2,11 @@ import { notifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { api, QuoteContextResponseData, SnippetResponseData } from '../api';
 import { assert, removeEmpty } from '../utils';
-import {
-  GenerationOptions,
-  isValid,
-  useGenerationOptions,
-} from './useGenerationOptions';
+import { isValid } from './useGenerationOptions';
+import { useOptionsContext } from './useOptionsContext';
 
 export const useGenerator = () => {
-  const { options } = useGenerationOptions();
+  const { options } = useOptionsContext();
   assert(isValid(options));
 
   const [snippet, setSnippet] = useState<SnippetResponseData>();

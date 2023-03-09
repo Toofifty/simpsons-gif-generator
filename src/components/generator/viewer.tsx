@@ -12,7 +12,7 @@ import {
 import { IconCopy, IconDownload } from '@tabler/icons-react';
 import { useState } from 'react';
 import { SnippetResponseData } from '../../api';
-import { useGenerationOptions } from '../../hooks/useGenerationOptions';
+import { useOptionsContext } from '../../hooks/useOptionsContext';
 
 interface ViewerProps {
   loading?: boolean;
@@ -25,7 +25,7 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
 
   const {
     options: { filetype = 'gif' },
-  } = useGenerationOptions();
+  } = useOptionsContext();
 
   return (
     <Stack align="center">

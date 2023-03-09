@@ -1,20 +1,20 @@
 import { Box, Divider, Text, useMantineTheme } from '@mantine/core';
-import { useState } from 'react';
 import { GeneratorPanel } from '../components/generator/generator-panel';
 import { Search } from '../components/search/search';
 import { Stats } from '../components/stats';
 import { useGenerationOptions } from '../hooks/useGenerationOptions';
 import { randomQuote } from '../random-quote';
 
+import { OptionsContext } from '../hooks/useOptionsContext';
+
 export default () => {
   const theme = useMantineTheme();
-
-  const { options, setRange } = useGenerationOptions();
+  const generation = useGenerationOptions();
 
   return (
-    <>
-      <Search setInitialRange={setRange} />
-      {options.begin && options.end ? (
+    <OptionsContext.Provider value={generation}>
+      <Search />
+      {generation.options.begin && generation.options.end ? (
         <GeneratorPanel />
       ) : (
         <Box mx="auto" m="xl" maw={600} ta="center">
@@ -28,6 +28,6 @@ export default () => {
           <Stats />
         </Box>
       )}
-    </>
+    </OptionsContext.Provider>
   );
 };

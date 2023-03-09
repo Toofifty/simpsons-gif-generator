@@ -1,9 +1,7 @@
-import { ScrollArea, Stack, Text, useMantineTheme } from '@mantine/core';
+import { Stack, Text, useMantineTheme } from '@mantine/core';
 import { QuoteContextResponseData } from '../../api';
-import {
-  isValid,
-  useGenerationOptions,
-} from '../../hooks/useGenerationOptions';
+import { isValid } from '../../hooks/useGenerationOptions';
+import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { assert } from '../../utils';
 import { SliderOption } from '../vertical-slider/slider-option';
 import { VerticalSlider } from '../vertical-slider/vertical-slider';
@@ -13,7 +11,7 @@ interface ContextProps {
 }
 
 export const Context = ({ context }: ContextProps) => {
-  const { options, setRange } = useGenerationOptions();
+  const { options, setRange } = useOptionsContext();
   assert(isValid(options));
 
   const theme = useMantineTheme();

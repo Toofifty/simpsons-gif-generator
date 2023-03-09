@@ -5,6 +5,17 @@ export type TransformMap<T> = {
   [K in keyof T]?: (value: string) => T[K];
 };
 
+const toObject = <T extends Record<string, any>>(
+  params: URLSearchParams,
+  transform: TransformMap<T>
+) =>
+  Object.fromEntries(
+    Object.entries(Object.fromEntries(params)).map(([k, v]) => [
+      k,
+      transform[k] ? transform[k]!(v) : v,
+    ])
+  ) as T;
+
 export const useQueryParams = <T extends Record<string, any>>(
   initialValue: T,
   transform: TransformMap<T>
@@ -12,22 +23,17 @@ export const useQueryParams = <T extends Record<string, any>>(
   const [searchParams, setSearchParams] = useSearchParams(initialValue);
 
   const value = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(Object.fromEntries(searchParams)).map(([k, v]) => [
-          k,
-          transform[k] ? transform[k]!(v) : v,
-        ])
-      ) as T,
+    () => toObject<T>(searchParams, transform),
     [searchParams]
   );
 
-  const setValue = useCallback(
-    (next: T | ((prev: T) => T)) => {
-      setSearchParams(typeof next === 'function' ? next(value) : next);
-    },
-    [value, setSearchParams]
-  );
+  const setValue = useCallback((next: T | ((prev: T) => T)) => {
+    setSearchParams(
+      typeof next === 'function'
+        ? (prev) => next(toObject<T>(prev, transform))
+        : new URLSearchParams(next)
+    );
+  }, []);
 
   return [value, setValue] as const;
 };

@@ -4,11 +4,7 @@ import { useQuoteSearch } from '../../hooks/useQuoteSearch';
 import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
-interface SearchProps {
-  setInitialRange: (begin: number, end: number) => void;
-}
-
-export const Search = ({ setInitialRange }: SearchProps) => {
+export const Search = () => {
   const [value, setValue] = useState<string>();
   const [searchFocused, setSearchFocused] = useState(false);
   const { results, loading } = useQuoteSearch({ term: value ?? '' });
@@ -25,11 +21,7 @@ export const Search = ({ setInitialRange }: SearchProps) => {
         />
       </Popover.Target>
       <Popover.Dropdown>
-        <SearchResults
-          term={value ?? ''}
-          results={results}
-          setRange={setInitialRange}
-        />
+        <SearchResults results={results} />
       </Popover.Dropdown>
     </Popover>
   );
