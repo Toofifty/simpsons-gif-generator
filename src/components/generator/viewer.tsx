@@ -12,16 +12,20 @@ import {
 import { IconCopy, IconDownload } from '@tabler/icons-react';
 import { useState } from 'react';
 import { SnippetResponseData } from '../../api';
+import { useGenerationOptions } from '../../hooks/useGenerationOptions';
 
 interface ViewerProps {
   loading?: boolean;
   snippet: SnippetResponseData;
-  filetype: 'mp4' | 'gif';
 }
 
-export const Viewer = ({ loading, snippet, filetype }: ViewerProps) => {
+export const Viewer = ({ loading, snippet }: ViewerProps) => {
   const theme = useMantineTheme();
   const [copied, setCopied] = useState(false);
+
+  const {
+    options: { filetype = 'gif' },
+  } = useGenerationOptions();
 
   return (
     <Stack align="center">

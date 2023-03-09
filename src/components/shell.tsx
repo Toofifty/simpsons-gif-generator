@@ -12,6 +12,7 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMoonStars, IconSun } from '@tabler/icons-react';
 import { ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 
 export const Shell = ({ children }: { children: ReactNode }) => {
@@ -39,7 +40,7 @@ export const Shell = ({ children }: { children: ReactNode }) => {
         >
           <Flex gap="xl" justify="space-between" align="center">
             <Flex gap="xl">
-              <Anchor href="https://simpsons.matho.me/" color="#ff0" fw="bold">
+              <Anchor component={NavLink} to="/" color="#ff0" fw="bold">
                 <Flex gap="sm">
                   <Image src={Logo} width="60" />
                   <Text
@@ -52,8 +53,8 @@ export const Shell = ({ children }: { children: ReactNode }) => {
                   </Text>
                 </Flex>
               </Anchor>
-              <Anchor href="https://simpsons.matho.me/" color="gray">
-                Search
+              <Anchor component={NavLink} to="/generate" color="gray">
+                Generate
               </Anchor>
             </Flex>
             <Flex gap="xl" justify="flex-end" align="center">

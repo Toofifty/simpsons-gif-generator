@@ -1,21 +1,17 @@
 import { notifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { api, QuoteContextResponseData, SnippetResponseData } from '../api';
-import { removeEmpty } from '../utils';
+import { assert, removeEmpty } from '../utils';
+import {
+  GenerationOptions,
+  isValid,
+  useGenerationOptions,
+} from './useGenerationOptions';
 
-export interface GeneratorOptions {
-  begin: number;
-  end: number;
+export const useGenerator = () => {
+  const { options } = useGenerationOptions();
+  assert(isValid(options));
 
-  extend?: number;
-  offset?: number;
-  resolution?: number;
-  subtitles?: boolean;
-
-  filetype?: 'mp4' | 'gif';
-}
-
-export const useGenerator = (options: GeneratorOptions) => {
   const [snippet, setSnippet] = useState<SnippetResponseData>();
   const [context, setContext] = useState<QuoteContextResponseData>();
   const [responseTime, setResponseTime] = useState<number>();

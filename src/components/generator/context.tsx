@@ -1,16 +1,21 @@
 import { ScrollArea, Stack, Text, useMantineTheme } from '@mantine/core';
 import { QuoteContextResponseData } from '../../api';
+import {
+  isValid,
+  useGenerationOptions,
+} from '../../hooks/useGenerationOptions';
+import { assert } from '../../utils';
 import { SliderOption } from '../vertical-slider/slider-option';
 import { VerticalSlider } from '../vertical-slider/vertical-slider';
 
 interface ContextProps {
   context: QuoteContextResponseData;
-  setRange: (begin: number, end: number) => void;
-  begin: number;
-  end: number;
 }
 
-export const Context = ({ context, begin, end, setRange }: ContextProps) => {
+export const Context = ({ context }: ContextProps) => {
+  const { options, setRange } = useGenerationOptions();
+  assert(isValid(options));
+
   const theme = useMantineTheme();
 
   const firstId = context.matches.before[0]!.id;
@@ -31,17 +36,20 @@ export const Context = ({ context, begin, end, setRange }: ContextProps) => {
       })}
     >
       <VerticalSlider
-        startIndex={begin - firstId}
-        endIndex={end - firstId}
+        startIndex={options.begin - firstId}
+        endIndex={options.end - firstId}
         setRange={(startIndex, endIndex) =>
           setRange(startIndex + firstId, endIndex + firstId)
         }
       >
         {lines.map(({ id, text }) => (
-          <SliderOption key={id} active={id >= begin && id < end}>
+          <SliderOption
+            key={id}
+            active={id >= options.begin && id < options.end}
+          >
             <Text
               color={
-                id >= begin && id <= end
+                id >= options.begin && id <= options.end
                   ? theme.colorScheme === 'dark'
                     ? theme.white
                     : theme.black

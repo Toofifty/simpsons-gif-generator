@@ -5,10 +5,10 @@ import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
 interface SearchProps {
-  setRange: (begin: number, end: number) => void;
+  setInitialRange: (begin: number, end: number) => void;
 }
 
-export const Search = ({ setRange }: SearchProps) => {
+export const Search = ({ setInitialRange }: SearchProps) => {
   const [value, setValue] = useState<string>();
   const [searchFocused, setSearchFocused] = useState(false);
   const { results, loading } = useQuoteSearch({ term: value ?? '' });
@@ -28,7 +28,7 @@ export const Search = ({ setRange }: SearchProps) => {
         <SearchResults
           term={value ?? ''}
           results={results}
-          setRange={setRange}
+          setRange={setInitialRange}
         />
       </Popover.Dropdown>
     </Popover>

@@ -12,3 +12,9 @@ export const episodeIdentifier = (meta: MetaBundle) =>
   `S${(meta.season_number + '').padStart(2, '0')}E${(
     meta.episode_in_season + ''
   ).padStart(2, '0')}`;
+
+export function assert(condition: any, message?: string): asserts condition {
+  if (!condition) {
+    throw new Error(message);
+  }
+}

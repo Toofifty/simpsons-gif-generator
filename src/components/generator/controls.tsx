@@ -12,8 +12,9 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconSettings, IconUpload } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { QuoteContextResponseData } from '../../api';
+import { useGenerationOptions } from '../../hooks/useGenerationOptions';
 import { SubmitCorrection } from './submit-correction';
 
 const TIME_MARKS = [
@@ -32,38 +33,13 @@ const RESOLUTION_MARKS = [
 
 interface ControlsProps {
   context: QuoteContextResponseData;
-  filetype: 'mp4' | 'gif';
-  setFiletype: (filetype: 'mp4' | 'gif') => void;
-  subtitles?: boolean;
-  setSubtitles: (subtitles: boolean) => void;
-  resolution?: number;
-  setResolution: (resolution: number) => void;
-  extend?: number;
-  setExtend: (extend: number) => void;
-  offset?: number;
-  setOffset: (offset: number) => void;
 }
 
-export const Controls = ({
-  context,
-  filetype,
-  setFiletype,
-  subtitles,
-  setSubtitles,
-  resolution,
-  setResolution,
-  extend,
-  setExtend,
-  offset,
-  setOffset,
-}: ControlsProps) => {
+export const Controls = ({ context }: ControlsProps) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [submittingCorrection, setSubmittingCorrection] = useState<number>();
 
-  useEffect(() => {
-    // auto-disable subtitles for mp4
-    setSubtitles(filetype !== 'mp4');
-  }, [filetype]);
+  const { options, setOption } = useGenerationOptions();
 
   return (
     <Stack>
@@ -74,7 +50,7 @@ export const Controls = ({
       />
       <Flex justify="space-between" align="center">
         <Text size="sm" tt="uppercase" fz="md">
-          {filetype} options
+          {options.filetype} options
         </Text>
         <Flex align="center" gap="sm">
           <Tooltip
@@ -91,16 +67,16 @@ export const Controls = ({
           </Tooltip>
           <Button.Group>
             <Button
-              variant={filetype === 'mp4' ? 'filled' : 'default'}
+              variant={options.filetype === 'mp4' ? 'filled' : 'default'}
               size="sm"
-              onClick={() => setFiletype('mp4')}
+              onClick={() => setOption('filetype', 'mp4')}
             >
               MP4
             </Button>
             <Button
-              variant={filetype === 'gif' ? 'filled' : 'default'}
+              variant={options.filetype === 'gif' ? 'filled' : 'default'}
               size="sm"
-              onClick={() => setFiletype('gif')}
+              onClick={() => setOption('filetype', 'gif')}
             >
               GIF
             </Button>
@@ -108,8 +84,8 @@ export const Controls = ({
         </Flex>
       </Flex>
       <Checkbox
-        checked={!!subtitles}
-        onChange={(e) => setSubtitles(e.currentTarget.checked)}
+        checked={!!options.subtitles}
+        onChange={(e) => setOption('subtitles', e.currentTarget.checked)}
         label="Render subtitles"
       />
       <Box pos="relative">
@@ -127,8 +103,8 @@ export const Controls = ({
             max={showAdvanced ? 5 : 15}
             step={showAdvanced ? 0.1 : 0.5}
             marks={showAdvanced ? TIME_MARKS.slice(0, 3) : TIME_MARKS}
-            value={offset ?? 0}
-            onChange={setOffset}
+            value={options.offset ?? 0}
+            onChange={(o) => setOption('offset', o)}
           />
         </Input.Wrapper>
         {showAdvanced && (
@@ -148,7 +124,7 @@ export const Controls = ({
             <Tooltip label="Send subtitle correction to API">
               <ActionIcon
                 variant="subtle"
-                onClick={() => setSubmittingCorrection(offset)}
+                onClick={() => setSubmittingCorrection(options.offset)}
               >
                 <IconUpload />
               </ActionIcon>
@@ -170,8 +146,8 @@ export const Controls = ({
           max={15}
           step={0.5}
           marks={TIME_MARKS}
-          value={extend ?? 0}
-          onChange={setExtend}
+          value={options.extend ?? 0}
+          onChange={(e) => setOption('extend', e)}
         />
       </Input.Wrapper>
       <Input.Wrapper
@@ -188,8 +164,8 @@ export const Controls = ({
           min={120}
           max={720}
           marks={RESOLUTION_MARKS}
-          value={resolution ?? 240}
-          onChange={setResolution}
+          value={options.resolution ?? 240}
+          onChange={(r) => setOption('resolution', r)}
         />
       </Input.Wrapper>
     </Stack>

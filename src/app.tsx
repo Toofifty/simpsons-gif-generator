@@ -1,25 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
 } from '@mantine/core';
 import { Shell } from './components/shell';
-import { Root } from './root';
 import { Notifications } from '@mantine/notifications';
+import { Outlet } from 'react-router-dom';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-
-  const [range, setRange] = useState<[number, number]>();
-
-  useEffect(() => {
-    if (range && range[0] > range[1]) {
-      setRange([range[1], range[0]]);
-    }
-  }, [range]);
 
   return (
     <ColorSchemeProvider
@@ -44,7 +36,7 @@ export const App = () => {
       >
         <Notifications />
         <Shell>
-          <Root range={range} setRange={setRange} />
+          <Outlet />
         </Shell>
       </MantineProvider>
     </ColorSchemeProvider>
