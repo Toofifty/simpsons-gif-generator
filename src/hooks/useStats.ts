@@ -1,3 +1,4 @@
+import { notifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { api, StatsResponseData } from '../api';
 
@@ -10,7 +11,12 @@ export const useStats = () => {
       setLoading(true);
       const response = await api.stats();
       if ('error' in response) {
-        console.error(response.error);
+        notifications.show({
+          title: 'Error loading stats',
+          message: response.error,
+          color: 'red',
+          autoClose: false,
+        });
         return;
       }
 

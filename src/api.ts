@@ -16,6 +16,7 @@ export interface MetaBundle {
   episode_title: string;
   episode_number: number;
   episode_in_season: number;
+  subtitle_correction?: number;
 }
 
 export interface Subtitle {
@@ -79,6 +80,16 @@ export interface SnippetResponseData {
   cached: boolean;
 }
 
+export interface EpisodeCorrectionRequest {
+  id: number;
+  passcode: string;
+  correction: number;
+}
+
+export interface EpisodeCorrectionResponseData {
+  message: string;
+}
+
 export const api = {
   async get<Req extends Record<string, any>, Res>(
     endpoint: string,
@@ -88,6 +99,20 @@ export const api = {
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/${endpoint}?${params.toString()}`
     );
+    return await res.json();
+  },
+
+  async post<Req extends Record<string, any>, Res>(
+    endpoint: string,
+    body: Req
+  ): Promise<APIResponse<Res> | APIError> {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
     return await res.json();
   },
 
@@ -115,5 +140,12 @@ export const api = {
 
   mp4(options: SnippetRequest) {
     return this.get<SnippetRequest, SnippetResponseData>('mp4', options);
+  },
+
+  correction(options: EpisodeCorrectionRequest) {
+    return this.post<EpisodeCorrectionRequest, EpisodeCorrectionResponseData>(
+      'episode/correction',
+      options
+    );
   },
 };

@@ -84,6 +84,7 @@ export const Generator = ({ begin, end, setRange }: GeneratorProps) => {
             )}
             <Controls
               {...{
+                context,
                 filetype,
                 setFiletype,
                 subtitles,

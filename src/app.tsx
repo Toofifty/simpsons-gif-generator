@@ -6,6 +6,7 @@ import {
 } from '@mantine/core';
 import { Shell } from './components/shell';
 import { Root } from './root';
+import { Notifications } from '@mantine/notifications';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
@@ -41,6 +42,7 @@ export const App = () => {
           }),
         }}
       >
+        <Notifications />
         <Shell>
           <Root range={range} setRange={setRange} />
         </Shell>

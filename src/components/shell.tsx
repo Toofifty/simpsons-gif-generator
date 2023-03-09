@@ -42,7 +42,14 @@ export const Shell = ({ children }: { children: ReactNode }) => {
               <Anchor href="https://simpsons.matho.me/" color="#ff0" fw="bold">
                 <Flex gap="sm">
                   <Image src={Logo} width="60" />
-                  Linguo
+                  <Text
+                    sx={() => ({
+                      WebkitFontSmoothing: 'antialiased',
+                      textShadow: '0 0 1px #000,'.repeat(20).replace(/,$/, ''),
+                    })}
+                  >
+                    Linguo
+                  </Text>
                 </Flex>
               </Anchor>
               <Anchor href="https://simpsons.matho.me/" color="gray">

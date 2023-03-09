@@ -8,6 +8,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { MetaBundle, SearchQuoteResponseData, Subtitle } from '../../api';
+import { episodeIdentifier } from '../../utils';
 
 interface SearchResultProps {
   result: {
@@ -45,9 +46,7 @@ const SearchResult = ({ result, setRange, first }: SearchResultProps) => {
     </Text>
   ));
 
-  const episode = `S${(result.meta.season_number + '').padStart(2, '0')}E${(
-    result.meta.episode_in_season + ''
-  ).padStart(2, '0')}`;
+  const episode = episodeIdentifier(result.meta);
 
   return (
     <>
