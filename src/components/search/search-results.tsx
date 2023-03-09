@@ -22,7 +22,7 @@ interface SearchResultProps {
 
 const SearchResult = ({ result, setRange, first }: SearchResultProps) => {
   const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   const before = result.before.map((line) => (
     <Text key={line.id} color="dimmed">
@@ -53,8 +53,7 @@ const SearchResult = ({ result, setRange, first }: SearchResultProps) => {
     <>
       {!first && isMobile && <Divider />}
       <UnstyledButton
-        miw={isMobile ? 200 : 'calc(800px - 4rem)'}
-        maw={isMobile ? 'calc(100vw - 4rem)' : 'calc(800px - 4rem)'}
+        w={isMobile ? 'calc(100vw - 4rem)' : 'calc(800px - 4rem)'}
         px="lg"
         py="sm"
         sx={(theme) => ({

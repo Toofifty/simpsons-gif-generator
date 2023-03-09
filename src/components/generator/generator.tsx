@@ -23,7 +23,7 @@ interface GeneratorProps {
 
 export const Generator = ({ begin, end, setRange }: GeneratorProps) => {
   const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   const [extend, setExtend] = useState(0);
   const [offset, setOffset] = useState(0);

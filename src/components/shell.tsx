@@ -5,15 +5,21 @@ import {
   Flex,
   Header,
   Image,
+  Text,
   useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconMoonStars, IconSun } from '@tabler/icons-react';
 import { ReactNode } from 'react';
 import Logo from '../assets/logo.png';
 
 export const Shell = ({ children }: { children: ReactNode }) => {
+  const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
+
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   return (
     <AppShell
@@ -32,20 +38,34 @@ export const Shell = ({ children }: { children: ReactNode }) => {
           })}
         >
           <Flex gap="xl" justify="space-between" align="center">
-            <Image src={Logo} width="60" />
+            <Flex gap="xl">
+              <Anchor href="https://simpsons.matho.me/" color="#ff0" fw="bold">
+                <Flex gap="sm">
+                  <Image src={Logo} width="60" />
+                  Linguo
+                </Flex>
+              </Anchor>
+              <Anchor href="https://simpsons.matho.me/" color="gray">
+                Search
+              </Anchor>
+            </Flex>
             <Flex gap="xl" justify="flex-end" align="center">
-              <Anchor
-                href="https://github.com/toofifty/simpsons-gif-generator"
-                color="gray"
-              >
-                Source
-              </Anchor>
-              <Anchor
-                href="https://github.com/toofifty/simpsons-api"
-                color="gray"
-              >
-                API
-              </Anchor>
+              {!isMobile && (
+                <>
+                  <Anchor
+                    href="https://github.com/toofifty/simpsons-gif-generator"
+                    color="gray"
+                  >
+                    Source
+                  </Anchor>
+                  <Anchor
+                    href="https://github.com/toofifty/simpsons-api"
+                    color="gray"
+                  >
+                    API
+                  </Anchor>
+                </>
+              )}
               <ActionIcon
                 variant="subtle"
                 color="gray"
