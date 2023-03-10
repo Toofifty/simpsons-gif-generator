@@ -37,6 +37,7 @@ export type GenerationOptionSetter = <T extends keyof GenerationOptions>(
 
 const defaultOptions = {
   filetype: 'gif',
+  subtitles: true,
 } as const;
 
 const validate = (options: GenerationOptions) => {
@@ -80,8 +81,6 @@ export const useGenerationOptions = () => {
         out.subtitles = value !== 'mp4';
       }
 
-      console.log('new value is', validate(out));
-
       return setOptions(validate(out));
     },
     [setOptions]
@@ -90,7 +89,8 @@ export const useGenerationOptions = () => {
   const setRange = useCallback(
     (begin: number, end: number) =>
       // reset all options when entire range changes
-      setOptions(validate({ begin, end })),
+      // because it defaults to gif, enable subtitles
+      setOptions(validate({ ...defaultOptions, begin, end })),
     [setOption]
   );
 
