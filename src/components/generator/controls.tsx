@@ -52,11 +52,6 @@ export const Controls = ({ context }: ControlsProps) => {
         onClose={() => setSubmittingCorrection(undefined)}
       />
       <Flex justify="space-between" align="center">
-        <input
-          type="number"
-          value={options.extend ?? 0}
-          onChange={(e) => setOption('extend', Number(e.target.value))}
-        />
         <Text size="sm" tt="uppercase" fz="md">
           {filetype} options
         </Text>

@@ -21,8 +21,8 @@ export default () => {
           <Text color={theme.colorScheme === 'dark' ? 'dark.2' : 'gray'}>
             Start searching for a quote, like:
           </Text>
-          <Text mt="lg" size="lg" italic>
-            {randomQuote()}
+          <Text m="lg" size="lg" italic>
+            "{randomQuote()}"
           </Text>
           <Divider my="xl" />
           <Stats />
