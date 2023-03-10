@@ -90,6 +90,24 @@ export interface EpisodeCorrectionResponseData {
   message: string;
 }
 
+export interface Snippet {
+  uuid: string;
+  url: string;
+  snapshot: string;
+  episode: { id: number };
+  published: boolean;
+  options: SnippetRequest & { filetype: 'mp4' | 'gif' | 'webm' };
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+  subtitles: { id: number; text: string }[];
+}
+
+export interface SnippetsResponseData {
+  results: Snippet[];
+  count: number;
+}
+
 export const api = {
   async get<Req extends Record<string, any>, Res>(
     endpoint: string,
@@ -147,5 +165,9 @@ export const api = {
       'episode/correction',
       options
     );
+  },
+
+  snippets() {
+    return this.get<{}, SnippetsResponseData>('snippets');
   },
 };

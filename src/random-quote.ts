@@ -19,7 +19,6 @@ const quotes = [
   'So I tied an onion to my belt, which was the style at the time.',
   'I call the big one Bitey',
   "You didn't do anything. (chuckles) Didn't I?",
-  "I'm going outside... to... stalk... Lenny and Carl... D'oh!",
   'In America, first you get the sugar, then you get the power, then you get the women.',
   'I know you can read my thoughts, boy. ♪ Meow meow meow meow meow meow meow meow ♪ ♪ Meow meow meow meow meow meow meow meow ♪',
   "I'm not a state! I'm a monster!",

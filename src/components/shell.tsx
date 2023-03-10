@@ -56,6 +56,9 @@ export const Shell = ({ children }: { children: ReactNode }) => {
               <Anchor component={NavLink} to="/generate" color="gray">
                 Generate
               </Anchor>
+              <Anchor component={NavLink} to="/snippets" color="gray">
+                Snippets
+              </Anchor>
             </Flex>
             <Flex gap="xl" justify="flex-end" align="center">
               {!isMobile && (

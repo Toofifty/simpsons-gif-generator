@@ -7,6 +7,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { ForwardedRef, forwardRef } from 'react';
 import { MetaBundle, SearchQuoteResponseData, Subtitle } from '../../api';
 import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { episodeIdentifier } from '../../utils';
@@ -99,36 +100,41 @@ interface SearchResultsProps {
   results?: SearchQuoteResponseData;
 }
 
-export const SearchResults = ({ loading, results }: SearchResultsProps) => {
-  if (loading) {
-    return <Text ta="center">Loading...</Text>;
-  }
+export const SearchResults = forwardRef(
+  (
+    { loading, results }: SearchResultsProps,
+    ref: ForwardedRef<HTMLDivElement>
+  ) => {
+    if (loading) {
+      return <Text ta="center">Loading...</Text>;
+    }
 
-  if (results === undefined) {
-    return <Text ta="center">Term is too short</Text>;
-  }
+    if (results === undefined) {
+      return <Text ta="center">Term is too short</Text>;
+    }
 
-  if (results.matches.length === 0) {
-    return <Text ta="center">No results found</Text>;
-  }
+    if (results.matches.length === 0) {
+      return <Text ta="center">No results found</Text>;
+    }
 
-  return (
-    <Stack>
-      {results.matches.slice(0, 5).map((result, i) => (
-        <SearchResult
-          first={i === 0}
-          key={result.lines[0].id}
-          result={result}
-        />
-      ))}
-      {results.matches.length > 5 && (
-        <>
-          <Divider />
-          <Text ta="center" color="dimmed">
-            {results.matches.length - 5} more results
-          </Text>
-        </>
-      )}
-    </Stack>
-  );
-};
+    return (
+      <Stack ref={ref}>
+        {results.matches.slice(0, 5).map((result, i) => (
+          <SearchResult
+            first={i === 0}
+            key={result.lines[0].id}
+            result={result}
+          />
+        ))}
+        {results.matches.length > 5 && (
+          <>
+            <Divider />
+            <Text ta="center" color="dimmed">
+              {results.matches.length - 5} more results
+            </Text>
+          </>
+        )}
+      </Stack>
+    );
+  }
+);
