@@ -35,6 +35,7 @@ export const Shell = ({ children }: { children: ReactNode }) => {
                 theme.colorScheme === 'dark'
                   ? theme.colors.dark[5]
                   : theme.colors.gray[3],
+              zIndex: 300,
             },
           })}
         >

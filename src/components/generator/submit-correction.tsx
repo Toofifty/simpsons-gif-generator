@@ -71,6 +71,7 @@ export const SubmitCorrection = ({
           required
           value={correction}
           onChange={setCorrection}
+          step={0.001}
         />
         <TextInput
           label="Passcode"

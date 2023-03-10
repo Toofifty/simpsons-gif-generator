@@ -10,7 +10,9 @@ import {
   Stack,
   Text,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconCopy,
   IconExternalLink,
@@ -43,8 +45,17 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
 
   const [playMp4, setPlayMp4] = useState(false);
 
+  const theme = useMantineTheme();
+  const isMedium = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+  const isSmall = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+
   return (
-    <Paper shadow="md" w={300} radius="sm" sx={() => ({ overflow: 'hidden' })}>
+    <Paper
+      shadow="md"
+      w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
+      radius="sm"
+      sx={() => ({ overflow: 'hidden' })}
+    >
       <Stack
         h="100%"
         justify="space-between"
