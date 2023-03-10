@@ -57,6 +57,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
                 height="225"
                 width="300"
                 autoPlay
+                controls
                 onEnded={() => setPlayMp4(false)}
               >
                 <source src={snippet.url} type="video/mp4" />
