@@ -1,5 +1,4 @@
-import { Box, rem } from '@mantine/core';
-import { ForwardedRef, forwardRef } from 'react';
+import { Box } from '@mantine/core';
 
 export const Bullet = () => (
   <Box

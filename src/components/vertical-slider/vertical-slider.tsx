@@ -67,7 +67,7 @@ export const VerticalSlider = ({
     const bullet = getBullets(ref.current)[startIndex];
     if (!bullet) return 0;
     const parent = bullet.offsetParent as HTMLElement;
-    return parent.offsetTop;
+    return parent?.offsetTop ?? 0;
   })();
 
   const endY = (() => {
@@ -75,7 +75,7 @@ export const VerticalSlider = ({
     const bullet = getBullets(ref.current)[endIndex];
     if (!bullet) return 0;
     const parent = bullet.offsetParent as HTMLElement;
-    return parent.offsetTop;
+    return parent?.offsetTop ?? 0;
   })();
 
   useEffect(() => {

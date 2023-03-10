@@ -1,5 +1,5 @@
 import { Box } from '@mantine/core';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { Bullet } from './bullet';
 
 interface BoxWithLineProps {

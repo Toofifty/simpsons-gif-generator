@@ -1,4 +1,10 @@
-import { Stack, Text, useMantineTheme } from '@mantine/core';
+import {
+  SpacingValue,
+  Stack,
+  SystemProp,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
 import { QuoteContextResponseData } from '../../api';
 import { isValid } from '../../hooks/useGenerationOptions';
 import { useOptionsContext } from '../../hooks/useOptionsContext';
@@ -8,9 +14,10 @@ import { VerticalSlider } from '../vertical-slider/vertical-slider';
 
 interface ContextProps {
   context: QuoteContextResponseData;
+  ml?: SystemProp<SpacingValue>;
 }
 
-export const Context = ({ context }: ContextProps) => {
+export const Context = ({ context, ml }: ContextProps) => {
   const { options, setRange } = useOptionsContext();
   assert(isValid(options));
 
@@ -26,7 +33,7 @@ export const Context = ({ context }: ContextProps) => {
 
   return (
     <Stack
-      ml="lg"
+      ml={ml}
       sx={() => ({
         maxHeight: '100%',
         overflow: 'auto',

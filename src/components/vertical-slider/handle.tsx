@@ -1,4 +1,4 @@
-import { Box, rem } from '@mantine/core';
+import { Box } from '@mantine/core';
 
 interface HandleProps {
   translateY: number;

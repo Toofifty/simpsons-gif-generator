@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Collapse,
   Divider,
   Flex,
   Loader,
@@ -8,7 +10,8 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useGenerator } from '../../hooks/useGenerator';
 import { Context } from './context';
 import { Controls } from './controls';
@@ -19,6 +22,9 @@ export const GeneratorPanel = () => {
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   const { context, snippet, loading, responseTime } = useGenerator();
+
+  const [mobileContextOpen, { toggle: toggleMobileContext }] =
+    useDisclosure(false);
 
   if (!context || !snippet) {
     return (
@@ -39,21 +45,39 @@ export const GeneratorPanel = () => {
         </Text>
         <Flex
           my="lg"
-          mah={isMobile ? undefined : 700}
+          mah={isMobile ? undefined : 800}
           direction={isMobile ? 'column' : undefined}
         >
           <Stack>
             <Viewer loading={loading} snippet={snippet} />
+            <Divider my="lg" mb={isMobile ? 'sm' : undefined} />
             {isMobile && (
               <>
-                <Divider my="xl" />
-                <Context context={context} />
-                <Divider my="xl" />
+                <Button
+                  variant="outline"
+                  color="gray"
+                  onClick={toggleMobileContext}
+                  ta="left"
+                  tt="uppercase"
+                  mt="-lg"
+                  rightIcon={
+                    mobileContextOpen ? <IconChevronUp /> : <IconChevronDown />
+                  }
+                >
+                  {mobileContextOpen ? 'Hide' : 'Show'} subtitle scrubber
+                </Button>
+                <Collapse in={mobileContextOpen}>
+                  <Context
+                    key={mobileContextOpen ? 'trigger' : 'rerender'}
+                    context={context}
+                  />
+                  <Divider my="xl" />
+                </Collapse>
               </>
             )}
             <Controls context={context} />
           </Stack>
-          {!isMobile && <Context context={context} />}
+          {!isMobile && <Context ml="lg" context={context} />}
         </Flex>
         {!!responseTime && (
           <Text fz="sm" color="dimmed">
