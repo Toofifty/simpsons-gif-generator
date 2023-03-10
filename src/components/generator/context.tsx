@@ -18,7 +18,7 @@ interface ContextProps {
 }
 
 export const Context = ({ context, ml }: ContextProps) => {
-  const { options, setRange } = useOptionsContext();
+  const { options, setOption, setRange } = useOptionsContext();
   assert(isValid(options));
 
   const theme = useMantineTheme();
@@ -43,9 +43,15 @@ export const Context = ({ context, ml }: ContextProps) => {
       <VerticalSlider
         startIndex={options.begin - firstId}
         endIndex={options.end - firstId}
-        setRange={(startIndex, endIndex) =>
-          setRange(startIndex + firstId, endIndex + firstId)
-        }
+        setRange={(startIndex, endIndex) => {
+          if (options.begin - firstId !== startIndex) {
+            setOption('begin', startIndex + firstId);
+          }
+
+          if (options.end - firstId !== endIndex) {
+            setOption('end', endIndex + firstId);
+          }
+        }}
       >
         {lines.map(({ id, text }) => (
           <SliderOption

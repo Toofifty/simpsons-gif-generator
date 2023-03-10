@@ -1,3 +1,5 @@
+import { removeEmpty } from './utils';
+
 export interface APIResponse<T> {
   status: 200;
   response_time: number;
@@ -76,6 +78,8 @@ export interface SnippetRequest {
 
 export interface SnippetResponseData {
   url: string;
+  uuid: string;
+  published: boolean;
   render_time: number;
   cached: boolean;
 }
@@ -103,9 +107,21 @@ export interface Snippet {
   subtitles: { id: number; text: string }[];
 }
 
+export interface SnippetsRequest {
+  offset?: number;
+}
+
 export interface SnippetsResponseData {
   results: Snippet[];
   count: number;
+}
+
+export interface SnippetPublishRequest {
+  uuid: string;
+}
+
+export interface SnippetPublishResponseData {
+  message: string;
 }
 
 export const api = {
@@ -113,7 +129,7 @@ export const api = {
     endpoint: string,
     query?: Req
   ): Promise<APIResponse<Res> | APIError> {
-    const params = new URLSearchParams(query);
+    const params = new URLSearchParams(query && removeEmpty(query));
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/${endpoint}?${params.toString()}`
     );
@@ -167,7 +183,14 @@ export const api = {
     );
   },
 
-  snippets() {
-    return this.get<{}, SnippetsResponseData>('snippets');
+  snippets(options: SnippetsRequest) {
+    return this.get<SnippetsRequest, SnippetsResponseData>('snippets', options);
+  },
+
+  publish(uuid: string) {
+    return this.post<SnippetPublishRequest, SnippetPublishResponseData>(
+      'snippets/publish',
+      { uuid }
+    );
   },
 };

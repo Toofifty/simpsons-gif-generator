@@ -12,17 +12,9 @@ import { useSnippets } from '../hooks/useSnippets';
 import { SnippetPreview } from './snippet-preview';
 
 export const SnippetList = () => {
-  const { loading, snippets, total } = useSnippets();
+  const { loading, snippets, total, fetchMore } = useSnippets();
 
-  if (loading) {
-    return (
-      <Group position="center" m="xl">
-        <Loader color="gray" m="xl" />
-      </Group>
-    );
-  }
-
-  if (total === 0 || snippets.length === 0) {
+  if (!loading && (total === 0 || snippets.length === 0)) {
     return (
       <Group position="center" m="xl">
         <Text>
@@ -44,7 +36,13 @@ export const SnippetList = () => {
       {total > snippets.length && (
         <Paper w={300} radius="sm" p="xl">
           <Flex justify="center" align="center" h="100%">
-            <Button variant="filled">Load more ...</Button>
+            {loading ? (
+              <Loader color="gray" m="xl" />
+            ) : (
+              <Button variant="filled" onClick={fetchMore}>
+                Load more ...
+              </Button>
+            )}
           </Flex>
         </Paper>
       )}

@@ -7,24 +7,27 @@ export const useSnippets = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const fetchMore = async () => {
     setLoading(true);
-    const timeout = setTimeout(async () => {
-      const response = await api.snippets();
-      if ('error' in response) {
-        notifications.show({
-          title: "Couldn't fetch published snippets",
-          message: response.error,
-        });
-        return;
-      }
+    const response = await api.snippets({
+      offset: snippets.length || undefined,
+    });
+    if ('error' in response) {
+      notifications.show({
+        title: "Couldn't fetch published snippets",
+        message: response.error,
+      });
+      return;
+    }
 
-      setSnippets(response.data.results);
-      setTotal(response.data.count);
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timeout);
+    setSnippets((snippets) => [...snippets, ...response.data.results]);
+    setTotal(response.data.count);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchMore();
   }, []);
 
-  return { snippets, loading, total };
+  return { snippets, loading, total, fetchMore };
 };

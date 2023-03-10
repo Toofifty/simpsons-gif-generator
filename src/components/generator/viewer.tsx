@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Box,
   Button,
   Image,
@@ -8,10 +9,18 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
-import { IconCopy, IconDownload } from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
+import {
+  IconCopy,
+  IconDownload,
+  IconStar,
+  IconStarFilled,
+} from '@tabler/icons-react';
 import { useState } from 'react';
-import { SnippetResponseData } from '../../api';
+import { api, SnippetResponseData } from '../../api';
+import { useGeneratorContext } from '../../hooks/useGeneratorContext';
 import { useOptionsContext } from '../../hooks/useOptionsContext';
+import { assert, download } from '../../utils';
 
 interface ViewerProps {
   loading?: boolean;
@@ -25,6 +34,29 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
   const {
     options: { filetype = 'gif' },
   } = useOptionsContext();
+
+  const { invalidate } = useGeneratorContext();
+
+  const publish = async () => {
+    assert(snippet);
+    if (snippet.published) return;
+
+    const response = await api.publish(snippet.uuid);
+    if ('error' in response) {
+      notifications.show({
+        title: 'Error while publishing',
+        message: response.error,
+        color: 'red',
+      });
+      return;
+    }
+
+    notifications.show({
+      title: 'Success!',
+      message: response.data.message,
+    });
+    invalidate();
+  };
 
   return (
     <Stack align="center">
@@ -62,12 +94,9 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
       </Box>
       <Button.Group>
         <Button
-          component="a"
-          href={snippet.url}
-          target="_blank"
-          download
           variant="default"
           leftIcon={<IconDownload />}
+          onClick={() => download(snippet.url)}
         >
           Download {filetype.toLocaleUpperCase()}
         </Button>
@@ -82,6 +111,32 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
             leftIcon={<IconCopy />}
           >
             Copy {filetype.toLocaleUpperCase()} URL
+          </Button>
+        </Tooltip>
+        <Tooltip
+          label={
+            snippet.published ? (
+              'This snippet has been published'
+            ) : (
+              <>
+                Satisfied with your GIF?
+                <br />
+                Publish it so it can be browsed by other users!
+              </>
+            )
+          }
+        >
+          <Button
+            variant={snippet.published ? 'filled' : 'default'}
+            px="xs"
+            color={snippet.published ? 'yellow' : undefined}
+            onClick={publish}
+          >
+            {snippet.published ? (
+              <IconStarFilled size="1.25rem" />
+            ) : (
+              <IconStar size="1.25rem" />
+            )}
           </Button>
         </Tooltip>
       </Button.Group>

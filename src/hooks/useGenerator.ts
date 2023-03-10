@@ -9,6 +9,7 @@ export const useGenerator = () => {
   const { options } = useOptionsContext();
   assert(isValid(options));
 
+  const [renderIndex, rerender] = useState(0);
   const [snippet, setSnippet] = useState<SnippetResponseData>();
   const [context, setContext] = useState<QuoteContextResponseData>();
   const [responseTime, setResponseTime] = useState<number>();
@@ -49,7 +50,9 @@ export const useGenerator = () => {
       setLoading(false);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [JSON.stringify(options)]);
+  }, [JSON.stringify(options), renderIndex]);
 
-  return { snippet, context, loading, responseTime };
+  const invalidate = () => rerender((i) => i + 1);
+
+  return { snippet, context, loading, responseTime, invalidate };
 };

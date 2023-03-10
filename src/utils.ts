@@ -1,6 +1,6 @@
 import { MetaBundle } from './api';
 
-export const removeEmpty = <T extends Record<any, any>>(obj: T): T =>
+export const removeEmpty = <T extends Record<string, any>>(obj: T): T =>
   Object.fromEntries(
     Object.entries(obj).filter(
       ([, value]) =>
@@ -18,3 +18,23 @@ export function assert(condition: any, message?: string): asserts condition {
     throw new Error(message);
   }
 }
+
+export const download = (url: string) => {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'blob';
+
+  xhr.onload = function () {
+    if (this.status === 200) {
+      var blob = new Blob([this.response], {
+        type: 'application/octet-stream',
+      });
+      var downloadLink = document.createElement('a');
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.download = url.substring(url.lastIndexOf('/') + 1);
+      downloadLink.click();
+    }
+  };
+
+  xhr.send();
+};
