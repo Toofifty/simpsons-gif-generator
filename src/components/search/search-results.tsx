@@ -1,13 +1,14 @@
 import {
   Divider,
   Flex,
+  Loader,
   Stack,
   Text,
   UnstyledButton,
   useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { ForwardedRef, forwardRef } from 'react';
+import { ForwardedRef, forwardRef, useEffect } from 'react';
 import { MetaBundle, SearchQuoteResponseData, Subtitle } from '../../api';
 import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { episodeIdentifier } from '../../utils';
@@ -95,14 +96,44 @@ const SearchResult = ({ result, first }: SearchResultProps) => {
   );
 };
 
+interface LoaderProps {
+  onIntersect: () => void;
+}
+
+const ScrollTrigger = ({ onIntersect }: LoaderProps) => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          console.log('intersect!');
+          onIntersect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(document.querySelector('#search-scroll-trigger')!);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [onIntersect]);
+
+  return (
+    <Text ta="center">
+      <Loader id="search-scroll-trigger" />
+    </Text>
+  );
+};
+
 interface SearchResultsProps {
   loading?: boolean;
   results?: SearchQuoteResponseData;
+  onNext: () => void;
 }
 
 export const SearchResults = forwardRef(
   (
-    { loading, results }: SearchResultsProps,
+    { loading, results, onNext }: SearchResultsProps,
     ref: ForwardedRef<HTMLDivElement>
   ) => {
     if (loading) {
@@ -118,19 +149,24 @@ export const SearchResults = forwardRef(
     }
 
     return (
-      <Stack ref={ref}>
-        {results.matches.slice(0, 5).map((result, i) => (
-          <SearchResult
-            first={i === 0}
-            key={result.lines[0].id}
-            result={result}
-          />
-        ))}
-        {results.matches.length > 5 && (
+      <Stack ref={ref} mah="calc(100vh - 200px)">
+        <Stack sx={{ overflowY: 'auto' }} mah={580}>
+          {results.matches.map((result, i) => (
+            <SearchResult
+              first={i === 0}
+              key={result.lines[0].id + i * 0xdeadbeef}
+              result={result}
+            />
+          ))}
+          {results.matches.length < results.total_results && (
+            <ScrollTrigger onIntersect={onNext} />
+          )}
+        </Stack>
+        {results.total_results - results.matches.length > 0 && (
           <>
             <Divider />
             <Text ta="center" color="dimmed">
-              {results.matches.length - 5} more results
+              {results.total_results - results.matches.length} more results
             </Text>
           </>
         )}

@@ -55,15 +55,21 @@ export interface QuoteContextResponseData {
 
 export interface SearchQuoteRequest {
   term: string;
+  offset?: number;
+  limit?: number;
 }
 
 export interface SearchQuoteResponseData {
   total_results: number;
+  offset: number;
+  limit: number;
+  remaining: number;
   matches: {
     meta: MetaBundle;
     before: Subtitle[];
     lines: Subtitle[];
     after: Subtitle[];
+    thumbnail: string;
   }[];
 }
 

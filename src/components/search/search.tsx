@@ -12,7 +12,7 @@ interface SearchProps {
 
 export const Search = ({ value, onChange }: SearchProps) => {
   const [searchFocused, setSearchFocused] = useState(false);
-  const { results, loading } = useQuoteSearch({ term: value ?? '' });
+  const { results, loading, fetchMore } = useQuoteSearch({ term: value ?? '' });
 
   useEffect(() => {
     setSearchFocused(!!value);
@@ -32,7 +32,7 @@ export const Search = ({ value, onChange }: SearchProps) => {
         />
       </Popover.Target>
       <Popover.Dropdown>
-        <SearchResults ref={resultsRef} results={results} />
+        <SearchResults ref={resultsRef} results={results} onNext={fetchMore} />
       </Popover.Dropdown>
     </Popover>
   );
