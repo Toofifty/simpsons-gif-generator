@@ -32,7 +32,13 @@ export const Search = ({ value, onChange }: SearchProps) => {
         />
       </Popover.Target>
       <Popover.Dropdown>
-        <SearchResults ref={resultsRef} results={results} onNext={fetchMore} />
+        <SearchResults
+          ref={resultsRef}
+          term={value}
+          loading={loading}
+          results={results}
+          onNext={fetchMore}
+        />
       </Popover.Dropdown>
     </Popover>
   );

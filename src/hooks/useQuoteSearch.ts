@@ -15,6 +15,10 @@ export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setResults(undefined);
+  }, [normalized]);
+
+  useEffect(() => {
     const timeout = setTimeout(async () => {
       if (normalized.length >= 5) {
         setLoading(true);
@@ -46,7 +50,7 @@ export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
 
     setResults((prev) => ({
       ...prev!,
-      ...response,
+      ...response.data,
       matches: [...prev!.matches, ...response.data.matches],
     }));
   }, [normalized, results]);
