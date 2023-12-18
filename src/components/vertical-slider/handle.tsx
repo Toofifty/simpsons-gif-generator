@@ -19,7 +19,7 @@ export const Handle = ({ translateY }: HandleProps) => (
       backgroundColor:
         theme.colorScheme === 'dark' ? theme.colors.blue[6] : theme.white,
       position: 'absolute',
-      top: 0,
+      top: '0.6rem',
       left: 0,
       transform: `translateY(${translateY}px)`,
     })}

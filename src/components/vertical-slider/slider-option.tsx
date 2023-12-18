@@ -25,9 +25,9 @@ const BoxWithLine = ({ active, children }: BoxWithLineProps) => (
           ? theme.colors.gray[7]
           : theme.colors.gray[4],
         width: '0.5rem',
-        height: 'calc(100% + 1rem)',
+        height: 'calc(100% + 0.2rem)',
         left: '-0.375rem',
-        top: '0.45rem',
+        top: '1rem',
       },
       '&:first-of-type::before': {
         borderTopLeftRadius: '0.25rem',

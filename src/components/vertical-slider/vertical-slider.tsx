@@ -114,7 +114,7 @@ export const VerticalSlider = ({
   }, [draggingHandle, dragY]);
 
   return (
-    <Stack ref={ref} pos="relative">
+    <Stack ref={ref} pos="relative" style={{ gap: 2 }}>
       {children}
       <Hitbox ref={hitboxRef}>
         <Handle

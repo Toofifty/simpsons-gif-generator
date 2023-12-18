@@ -11,7 +11,7 @@ export const Bullet = () => (
       border: `.125rem solid ${theme.white}`,
       backgroundColor: theme.white,
       position: 'absolute',
-      top: '.6rem',
+      top: '1.2rem',
       left: '-.25rem',
       right: 'auto',
     })}

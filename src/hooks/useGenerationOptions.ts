@@ -9,6 +9,7 @@ export interface GenerationOptions {
   extend?: number;
   resolution?: number;
   subtitles?: boolean;
+  substitutions?: string;
 }
 
 export interface ValidGenerationOptions extends GenerationOptions {
@@ -28,6 +29,7 @@ const transform: TransformMap<GenerationOptions> = {
   extend: (v) => (v ? Number(v) : undefined),
   resolution: (v) => (v ? Number(v) : undefined),
   subtitles: (v) => (v ? v === 'true' : undefined),
+  substitutions: (v) => (v.length > 0 && v !== 'undefined' ? v : undefined),
 };
 
 export type GenerationOptionSetter = <T extends keyof GenerationOptions>(

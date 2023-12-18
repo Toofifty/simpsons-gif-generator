@@ -16,6 +16,12 @@ const toObject = <T extends Record<string, any>>(
     ])
   ) as T;
 
+const withoutEmpties = <T extends Record<string, any>>(value: T) => {
+  return Object.fromEntries(
+    Object.entries(value).filter(([_, v]) => v !== undefined)
+  );
+};
+
 export const useQueryParams = <T extends Record<string, any>>(
   initialValue: T,
   transform: TransformMap<T>
@@ -31,7 +37,7 @@ export const useQueryParams = <T extends Record<string, any>>(
     setSearchParams(
       typeof next === 'function'
         ? (prev) => next(toObject<T>(prev, transform))
-        : new URLSearchParams(next)
+        : new URLSearchParams(withoutEmpties(next))
     );
   }, []);
 

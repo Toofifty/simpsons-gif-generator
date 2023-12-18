@@ -1,8 +1,11 @@
 import {
+  ActionIcon,
   SpacingValue,
   Stack,
   SystemProp,
   Text,
+  TextInput,
+  Textarea,
   useMantineTheme,
 } from '@mantine/core';
 import { QuoteContextResponseData } from '../../api';
@@ -11,6 +14,8 @@ import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { assert } from '../../utils';
 import { SliderOption } from '../vertical-slider/slider-option';
 import { VerticalSlider } from '../vertical-slider/vertical-slider';
+import { useEffect, useState } from 'react';
+import { IconX } from '@tabler/icons-react';
 
 interface ContextProps {
   context: QuoteContextResponseData;
@@ -18,12 +23,35 @@ interface ContextProps {
 }
 
 export const Context = ({ context, ml }: ContextProps) => {
-  const { options, setOption, setRange } = useOptionsContext();
+  const { options, setOption } = useOptionsContext();
   assert(isValid(options));
 
-  const theme = useMantineTheme();
+  const [substitutions, setSubstitutions] = useState<Record<number, string>>(
+    {}
+  );
 
-  const firstId = context.matches.before[0]!.id;
+  const firstRenderedId = context.matches.before[0]!.id;
+
+  useEffect(() => {
+    if (Object.keys(substitutions).length > 0) {
+      setOption(
+        'substitutions',
+        Object.entries(substitutions)
+          .reduce((acc, [id, sub]) => {
+            acc[Number(id) - options.begin] = sub;
+            return acc;
+          }, Array(options.end - options.begin).fill('~'))
+          .map((v) => (typeof v ? v : '~'))
+          .join(',')
+      );
+    } else {
+      setOption('substitutions', undefined);
+    }
+  }, [substitutions, options.begin]);
+
+  useEffect(() => {
+    setSubstitutions([]);
+  }, [context.meta.episode_title]);
 
   const lines = [
     ...context.matches.before,
@@ -34,43 +62,63 @@ export const Context = ({ context, ml }: ContextProps) => {
   return (
     <Stack
       ml={ml}
-      sx={() => ({
+      sx={{
         maxHeight: '100%',
         overflow: 'auto',
         flex: 1,
-      })}
+      }}
     >
       <VerticalSlider
-        startIndex={options.begin - firstId}
-        endIndex={options.end - firstId}
+        startIndex={options.begin - firstRenderedId}
+        endIndex={options.end - firstRenderedId}
         setRange={(startIndex, endIndex) => {
-          if (options.begin - firstId !== startIndex) {
-            setOption('begin', startIndex + firstId);
+          if (options.begin - firstRenderedId !== startIndex) {
+            setOption('begin', startIndex + firstRenderedId);
           }
 
-          if (options.end - firstId !== endIndex) {
-            setOption('end', endIndex + firstId);
+          if (options.end - firstRenderedId !== endIndex) {
+            setOption('end', endIndex + firstRenderedId);
           }
         }}
       >
-        {lines.map(({ id, text }) => (
-          <SliderOption
-            key={id}
-            active={id >= options.begin && id < options.end}
-          >
-            <Text
-              color={
-                id >= options.begin && id <= options.end
-                  ? theme.colorScheme === 'dark'
-                    ? theme.white
-                    : theme.black
-                  : 'dimmed'
-              }
+        {lines.map(({ id, text }) => {
+          const disabled = id < options.begin || id > options.end;
+          return (
+            <SliderOption
+              key={id}
+              active={id >= options.begin && id < options.end}
             >
-              {text}
-            </Text>
-          </SliderOption>
-        ))}
+              <Textarea
+                autosize
+                m="0"
+                value={substitutions[id] ?? text.trim().replace('\n', ' ')}
+                variant="filled"
+                disabled={id < options.begin || id > options.end}
+                onChange={(e) => {
+                  setSubstitutions((subs) => ({
+                    ...subs,
+                    [id]: e.target.value === text ? '~' : e.target.value,
+                  }));
+                }}
+                rightSection={
+                  substitutions[id] ? (
+                    <ActionIcon
+                      onClick={() => {
+                        setSubstitutions((subs) => {
+                          const copy = { ...subs };
+                          delete copy[id];
+                          return copy;
+                        });
+                      }}
+                    >
+                      <IconX />
+                    </ActionIcon>
+                  ) : undefined
+                }
+              />
+            </SliderOption>
+          );
+        })}
       </VerticalSlider>
     </Stack>
   );
