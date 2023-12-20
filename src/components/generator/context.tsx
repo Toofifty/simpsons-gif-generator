@@ -41,7 +41,7 @@ export const Context = ({ context, ml }: ContextProps) => {
             acc[Number(id) - options.begin] = sub;
             return acc;
           }, Array(options.end - options.begin).fill('~'))
-          .map((v) => (typeof v ? v : '~'))
+          .map((v) => (typeof v ? `"${v}"` : '~'))
           .join(',')
       );
     } else {
@@ -81,44 +81,41 @@ export const Context = ({ context, ml }: ContextProps) => {
           }
         }}
       >
-        {lines.map(({ id, text }) => {
-          const disabled = id < options.begin || id > options.end;
-          return (
-            <SliderOption
-              key={id}
-              active={id >= options.begin && id < options.end}
-            >
-              <Textarea
-                autosize
-                m="0"
-                value={substitutions[id] ?? text.trim().replace('\n', ' ')}
-                variant="filled"
-                disabled={id < options.begin || id > options.end}
-                onChange={(e) => {
-                  setSubstitutions((subs) => ({
-                    ...subs,
-                    [id]: e.target.value === text ? '~' : e.target.value,
-                  }));
-                }}
-                rightSection={
-                  substitutions[id] ? (
-                    <ActionIcon
-                      onClick={() => {
-                        setSubstitutions((subs) => {
-                          const copy = { ...subs };
-                          delete copy[id];
-                          return copy;
-                        });
-                      }}
-                    >
-                      <IconX />
-                    </ActionIcon>
-                  ) : undefined
-                }
-              />
-            </SliderOption>
-          );
-        })}
+        {lines.map(({ id, text }) => (
+          <SliderOption
+            key={id}
+            active={id >= options.begin && id < options.end}
+          >
+            <Textarea
+              autosize
+              m="0"
+              value={substitutions[id] ?? text.trim().replace('\n', ' ')}
+              variant="filled"
+              disabled={id < options.begin || id > options.end}
+              onChange={(e) => {
+                setSubstitutions((subs) => ({
+                  ...subs,
+                  [id]: e.target.value === text ? '~' : e.target.value,
+                }));
+              }}
+              rightSection={
+                substitutions[id] ? (
+                  <ActionIcon
+                    onClick={() => {
+                      setSubstitutions((subs) => {
+                        const copy = { ...subs };
+                        delete copy[id];
+                        return copy;
+                      });
+                    }}
+                  >
+                    <IconX />
+                  </ActionIcon>
+                ) : undefined
+              }
+            />
+          </SliderOption>
+        ))}
       </VerticalSlider>
     </Stack>
   );

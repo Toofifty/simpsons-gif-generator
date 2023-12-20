@@ -167,7 +167,7 @@ export const Controls = ({ context }: ControlsProps) => {
           min={120}
           max={720}
           marks={RESOLUTION_MARKS}
-          value={options.resolution ?? 240}
+          value={options.resolution ?? 480}
           onChange={(r) => setOption('resolution', r)}
         />
       </Input.Wrapper>
