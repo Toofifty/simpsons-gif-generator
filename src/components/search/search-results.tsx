@@ -2,34 +2,7 @@ import { Divider, Loader, Stack, Text } from '@mantine/core';
 import { ForwardedRef, forwardRef, useEffect } from 'react';
 import { SearchQuoteResponseData } from '../../api';
 import { SearchResult } from './search-result';
-
-interface LoaderProps {
-  onIntersect: () => void;
-}
-
-const ScrollTrigger = ({ onIntersect }: LoaderProps) => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          onIntersect();
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(document.querySelector('#search-scroll-trigger')!);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [onIntersect]);
-
-  return (
-    <Text ta="center">
-      <Loader id="search-scroll-trigger" />
-    </Text>
-  );
-};
+import { ScrollTrigger } from '../scroll-trigger';
 
 interface SearchResultsProps {
   loading?: boolean;
@@ -66,7 +39,9 @@ export const SearchResults = forwardRef(
             />
           ))}
           {results.matches.length < results.total_results && (
-            <ScrollTrigger onIntersect={onNext} />
+            <ScrollTrigger id="search-scroll-trigger" onIntersect={onNext}>
+              <Loader />
+            </ScrollTrigger>
           )}
         </Stack>
         {results.total_results - results.matches.length > 0 && (

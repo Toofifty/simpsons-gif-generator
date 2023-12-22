@@ -10,6 +10,7 @@ import {
 import { NavLink } from 'react-router-dom';
 import { useSnippets } from '../hooks/useSnippets';
 import { SnippetPreview } from './snippet-preview';
+import { ScrollTrigger } from './scroll-trigger';
 
 export const SnippetList = () => {
   const { loading, snippets, total, fetchMore } = useSnippets();
@@ -29,23 +30,20 @@ export const SnippetList = () => {
   }
 
   return (
-    <Flex wrap="wrap" gap="lg">
-      {snippets.map((snippet) => (
-        <SnippetPreview key={snippet.uuid} snippet={snippet} />
-      ))}
+    <>
+      <Flex wrap="wrap" gap="lg">
+        {snippets.map((snippet) => (
+          <SnippetPreview key={snippet.uuid} snippet={snippet} />
+        ))}
+      </Flex>
+
       {total > snippets.length && (
-        <Paper w={300} radius="sm" p="xl">
-          <Flex justify="center" align="center" h="100%">
-            {loading ? (
-              <Loader color="gray" m="xl" />
-            ) : (
-              <Button variant="filled" onClick={fetchMore}>
-                Load more ...
-              </Button>
-            )}
-          </Flex>
-        </Paper>
+        <Flex justify="center" align="center" h="100%">
+          <ScrollTrigger id="snippet-scroll-trigger" onIntersect={fetchMore}>
+            <Loader m={120} />
+          </ScrollTrigger>
+        </Flex>
       )}
-    </Flex>
+    </>
   );
 };

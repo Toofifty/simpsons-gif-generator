@@ -115,6 +115,7 @@ export interface Snippet {
 
 export interface SnippetsRequest {
   offset?: number;
+  limit?: number;
 }
 
 export interface SnippetsResponseData {

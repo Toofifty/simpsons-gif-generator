@@ -5,6 +5,7 @@ import {
   Button,
   Flex,
   Image,
+  Loader,
   Overlay,
   Paper,
   Stack,
@@ -65,8 +66,8 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
           <Box sx={() => ({ position: 'relative' })}>
             {playMp4 ? (
               <video
-                height="225"
-                width="300"
+                height="100%"
+                width="100%"
                 autoPlay
                 controls
                 onEnded={() => setPlayMp4(false)}
@@ -76,7 +77,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
               </video>
             ) : (
               <>
-                <Image src={snippet.snapshot} />
+                <Image h={225} src={snippet.snapshot} />
                 <Overlay>
                   <Flex justify="center" align="center" h="100%">
                     <ActionIcon
@@ -111,7 +112,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
           </Box>
         ) : (
           <>
-            <Image src={snippet.url} />
+            <Image h={225} src={snippet.url} />
             <Badge
               variant="filled"
               color="blue"
