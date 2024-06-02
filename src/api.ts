@@ -123,12 +123,36 @@ export interface SnippetsResponseData {
   count: number;
 }
 
+export interface RandomSnippetResponse {
+  result: Snippet;
+}
+
 export interface SnippetPublishRequest {
   uuid: string;
 }
 
 export interface SnippetPublishResponseData {
   message: string;
+}
+
+export interface LogsRequest {
+  filter?: string;
+  offset?: number;
+  limit: number;
+}
+
+export interface LogsResponseData {
+  total: number;
+  logs: {
+    id: number;
+    createdAt: string;
+    status: number;
+    requestPath: string;
+    body: string;
+    success: boolean;
+    responseTime: number;
+    renderTime?: number;
+  }[];
 }
 
 export const api = {
@@ -159,6 +183,10 @@ export const api = {
 
   stats() {
     return this.get<{}, StatsResponseData>('');
+  },
+
+  logs(options: LogsRequest) {
+    return this.get<LogsRequest, LogsResponseData>('logs', options);
   },
 
   context(options: QuoteContextRequest) {
@@ -192,6 +220,10 @@ export const api = {
 
   snippets(options: SnippetsRequest) {
     return this.get<SnippetsRequest, SnippetsResponseData>('snippets', options);
+  },
+
+  randomSnippet() {
+    return this.get<{}, RandomSnippetResponse>('snippets/random');
   },
 
   publish(uuid: string) {

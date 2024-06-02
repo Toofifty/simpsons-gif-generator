@@ -4,6 +4,7 @@ import { App } from './app';
 
 const GeneratorPageLazy = lazy(() => import('./pages/generator'));
 const SnippetsPageLazy = lazy(() => import('./pages/snippets'));
+const LogsPageLazy = lazy(() => import('./pages/logs'));
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <Navigate to="/generate" /> },
       { path: '/generate', element: <GeneratorPageLazy /> },
       { path: '/snippets', element: <SnippetsPageLazy /> },
+      { path: '/logs', element: <LogsPageLazy /> },
     ],
   },
 ]);
