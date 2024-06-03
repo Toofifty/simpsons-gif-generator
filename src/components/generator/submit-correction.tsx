@@ -20,17 +20,10 @@ interface SubmitCorrectionProps {
 
 export const SubmitCorrection = ({
   context,
-  correction: initialCorrection,
+  correction,
   onClose,
 }: SubmitCorrectionProps) => {
-  const [correction, setCorrection] = useInputState<number | ''>(
-    initialCorrection!
-  );
   const [passcode, setPasscode] = useInputState('');
-
-  useEffect(() => {
-    setCorrection(initialCorrection);
-  }, [initialCorrection]);
 
   const submit = async () => {
     if (!correction) return;
@@ -65,14 +58,7 @@ export const SubmitCorrection = ({
       centered
     >
       <Stack>
-        <NumberInput
-          label="Correction"
-          name="correction"
-          required
-          value={correction}
-          onChange={setCorrection}
-          step={0.001}
-        />
+        <Text>Correction: {correction?.toFixed(2)}s</Text>
         <TextInput
           label="Passcode"
           name="passcode"

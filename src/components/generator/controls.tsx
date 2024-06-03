@@ -49,7 +49,10 @@ export const Controls = ({ context }: ControlsProps) => {
       <SubmitCorrection
         context={context}
         correction={submittingCorrection}
-        onClose={() => setSubmittingCorrection(undefined)}
+        onClose={() => {
+          setSubmittingCorrection(undefined);
+          setOption('offset', 0);
+        }}
       />
       <Flex justify="space-between" align="center">
         <Text size="sm" tt="uppercase" fz="md">
