@@ -10,7 +10,7 @@ export const useGenerator = () => {
   assert(isValid(options));
 
   const [renderIndex, rerender] = useState(0);
-  const [snippet, setSnippet] = useState<ClipResponseData>();
+  const [clip, setClip] = useState<ClipResponseData>();
   const [context, setContext] = useState<QuoteContextResponseData>();
   const [responseTime, setResponseTime] = useState<number>();
   const [loading, setLoading] = useState(false);
@@ -30,22 +30,22 @@ export const useGenerator = () => {
       }
       setContext(contextResponse.data);
 
-      const snippetResponse = await api[options.filetype ?? 'gif'](
+      const clipResponse = await api[options.filetype ?? 'gif'](
         removeEmpty({ ...options, subtitles: options.subtitles ? 1 : 0 })
       );
-      if ('error' in snippetResponse) {
+      if ('error' in clipResponse) {
         notifications.show({
-          title: 'Error generating snippet',
-          message: snippetResponse.error,
+          title: 'Error generating clip',
+          message: clipResponse.error,
           color: 'red',
           autoClose: false,
         });
         return;
       }
 
-      setSnippet(snippetResponse.data);
+      setClip(clipResponse.data);
       setResponseTime(
-        Math.max(snippetResponse.response_time, contextResponse.response_time)
+        Math.max(clipResponse.response_time, contextResponse.response_time)
       );
       setLoading(false);
     }, 1000);
@@ -54,5 +54,5 @@ export const useGenerator = () => {
 
   const invalidate = () => rerender((i) => i + 1);
 
-  return { snippet, context, loading, responseTime, invalidate };
+  return { clip, context, loading, responseTime, invalidate };
 };

@@ -8,18 +8,23 @@ import {
   Text,
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
-import { useSnippets } from '../hooks/useSnippets';
-import { SnippetPreview } from './snippet-preview';
+import { ClipPreview } from './clip-preview';
 import { ScrollTrigger } from './scroll-trigger';
+import { useClips } from '../hooks/useClips';
 
-export const SnippetList = () => {
-  const { loading, snippets, total, fetchMore } = useSnippets();
+interface ClipListProps {
+  filetype: 'gif' | 'mp4';
+  sort: 'recent' | 'popular';
+}
 
-  if (!loading && (total === 0 || snippets.length === 0)) {
+export const ClipList = ({ filetype, sort }: ClipListProps) => {
+  const { loading, clips, total, fetchMore } = useClips(sort);
+
+  if (!loading && (total === 0 || clips.length === 0)) {
     return (
       <Group position="center" m="xl">
         <Text>
-          No snippets available! Please try again later or{' '}
+          No clips available! Please try again later or{' '}
           <Anchor component={NavLink} to="/generate">
             generate your own
           </Anchor>
@@ -32,14 +37,14 @@ export const SnippetList = () => {
   return (
     <>
       <Flex wrap="wrap" gap="lg">
-        {snippets.map((snippet) => (
-          <SnippetPreview key={snippet.uuid} snippet={snippet} />
+        {clips.map((clip) => (
+          <ClipPreview key={clip.clip_uuid} filetype={filetype} clip={clip} />
         ))}
       </Flex>
 
-      {total > snippets.length && (
+      {total > clips.length && (
         <Flex justify="center" align="center" h="100%">
-          <ScrollTrigger id="snippet-scroll-trigger" onIntersect={fetchMore}>
+          <ScrollTrigger id="clip-scroll-trigger" onIntersect={fetchMore}>
             <Loader m={120} />
           </ScrollTrigger>
         </Flex>

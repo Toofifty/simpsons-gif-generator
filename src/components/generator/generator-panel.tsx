@@ -22,13 +22,12 @@ export const GeneratorPanel = () => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
-  const { context, snippet, loading, responseTime, invalidate } =
-    useGenerator();
+  const { context, clip, loading, responseTime, invalidate } = useGenerator();
 
   const [mobileContextOpen, { toggle: toggleMobileContext }] =
     useDisclosure(false);
 
-  if (!context || !snippet) {
+  if (!context || !clip) {
     return (
       <Paper shadow="xl" p="xl" m="xl" maw="800px" mx="auto">
         <Flex justify="center">
@@ -40,7 +39,7 @@ export const GeneratorPanel = () => {
 
   return (
     <GeneratorContext.Provider
-      value={{ context, snippet, loading, responseTime, invalidate }}
+      value={{ context, clip, loading, responseTime, invalidate }}
     >
       <Box mx="auto" maw="800px">
         <Paper shadow="xl" p="xl" m="xl" mx="lg">
@@ -56,7 +55,7 @@ export const GeneratorPanel = () => {
             direction={isMobile ? 'column' : undefined}
           >
             <Stack>
-              <Viewer loading={loading} snippet={snippet} />
+              <Viewer loading={loading} clip={clip} />
               <Divider my="lg" mb={isMobile ? 'sm' : undefined} />
               {isMobile && (
                 <>

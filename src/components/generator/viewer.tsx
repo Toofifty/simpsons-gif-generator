@@ -8,25 +8,18 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import {
-  IconCopy,
-  IconDownload,
-  IconStar,
-  IconStarFilled,
-} from '@tabler/icons-react';
+import { IconCopy, IconDownload } from '@tabler/icons-react';
 import { useState } from 'react';
 import { api, ClipResponseData } from '../../api';
-import { useGeneratorContext } from '../../hooks/useGeneratorContext';
 import { useOptionsContext } from '../../hooks/useOptionsContext';
-import { assert, download } from '../../utils';
+import { download } from '../../utils';
 
 interface ViewerProps {
   loading?: boolean;
-  snippet: ClipResponseData;
+  clip: ClipResponseData;
 }
 
-export const Viewer = ({ loading, snippet }: ViewerProps) => {
+export const Viewer = ({ loading, clip }: ViewerProps) => {
   const theme = useMantineTheme();
   const [copied, setCopied] = useState(false);
 
@@ -37,7 +30,7 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
   return (
     <Stack align="center">
       <Box mah={270} maw={360} pos="relative">
-        {loading || !snippet.url ? (
+        {loading || !clip.url ? (
           <Skeleton height="270" width="360" />
         ) : (
           <>
@@ -50,7 +43,7 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
                 autoPlay
                 style={{ borderRadius: theme.radius.sm }}
               >
-                <source src={snippet.url} type="video/mp4" />
+                <source src={clip.url} type="video/mp4" />
                 Unable to load video
               </video>
             )}
@@ -60,7 +53,7 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
                 fit="contain"
                 width="360"
                 height="270"
-                src={snippet.url}
+                src={clip.url}
                 withPlaceholder
               />
             )}
@@ -72,14 +65,15 @@ export const Viewer = ({ loading, snippet }: ViewerProps) => {
         <Button
           variant="default"
           leftIcon={<IconDownload />}
-          onClick={() => download(snippet.url)}
+          onClick={() => download(clip.url)}
         >
           Download {filetype.toLocaleUpperCase()}
         </Button>
         <Tooltip label="Copied!" opened={copied}>
           <Button
             onClick={() => {
-              navigator.clipboard.writeText(snippet.url);
+              navigator.clipboard.writeText(clip.url);
+              api.trackCopy({ uuid: clip.generation_uuid });
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}

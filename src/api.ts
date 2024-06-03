@@ -84,7 +84,8 @@ export interface ClipRequest {
 
 export interface ClipResponseData {
   url: string;
-  uuid: string;
+  clip_uuid: string;
+  generation_uuid: string;
   render_time: number;
   subtitle_correction: number;
   cached: boolean;
@@ -97,8 +98,8 @@ export interface ClipResponseData {
 
 export interface ClipsRequest {
   filetype: string;
-  sort_by: 'views' | 'created_at' | 'episode_id';
-  order: 'asc' | 'desc';
+  sort_by?: 'views' | 'created_at' | 'episode_id';
+  order?: 'asc' | 'desc';
   offset?: number;
   limit?: number;
 }
@@ -118,35 +119,21 @@ export interface EpisodeCorrectionResponseData {
   message: string;
 }
 
-export interface Snippet {
-  uuid: string;
-  url: string;
-  snapshot: string;
-  episode: { id: number };
-  options: ClipRequest & { filetype: 'mp4' | 'gif' | 'webm' };
-  views: number;
-  createdAt: string;
-  updatedAt: string;
-  subtitles: { id: number; text: string }[];
-}
-
 export interface Clip {
+  clip_uuid: string;
+  generation_uuid: string;
+  options: {
+    begin: number;
+    end: number;
+    offset: number;
+    extend: number;
+  };
   episode_id: number;
   snapshot: string;
   url: string;
   views: number;
   copies: number;
   subtitles: { id: number; text: string }[];
-}
-
-export interface SnippetsRequest {
-  offset?: number;
-  limit?: number;
-}
-
-export interface SnippetsResponseData {
-  results: Snippet[];
-  count: number;
 }
 
 export interface LogsRequest {
@@ -169,6 +156,10 @@ export interface LogsResponseData {
   }[];
 }
 
+export interface TrackCopyRequest {
+  uuid: string;
+}
+
 export const api = {
   async get<Req extends Record<string, any>, Res>(
     endpoint: string,
@@ -176,7 +167,8 @@ export const api = {
   ): Promise<APIResponse<Res> | APIError> {
     const params = new URLSearchParams(query && removeEmpty(query));
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/${endpoint}?${params.toString()}`
+      `${import.meta.env.VITE_API_URL}/${endpoint}?${params.toString()}`,
+      { headers: { 'x-simpsons-frontend': 'true' } }
     );
     return await res.json();
   },
@@ -232,15 +224,15 @@ export const api = {
     );
   },
 
-  snippets(options: SnippetsRequest) {
-    return this.get<SnippetsRequest, SnippetsResponseData>('snippets', options);
-  },
-
   clips(options: ClipsRequest) {
     return this.get<ClipsRequest, ClipsResponseData>('clips', options);
   },
 
   randomClip() {
     return this.get<{}, ClipResponseData>('clips/random');
+  },
+
+  trackCopy(options: TrackCopyRequest) {
+    return this.get<TrackCopyRequest, {}>('generations/track-copy', options);
   },
 };

@@ -97,7 +97,7 @@ export const Controls = ({ context }: ControlsProps) => {
       <Box pos="relative">
         <Input.Wrapper
           label="Subtitle offset"
-          description="Change the starting point of the snippet"
+          description="Change the starting point of the clip"
           mb="md"
           styles={(theme) => ({
             description: { marginBottom: theme.spacing.xs },
@@ -140,7 +140,7 @@ export const Controls = ({ context }: ControlsProps) => {
       </Box>
       <Input.Wrapper
         label="Extend"
-        description="Increase or decrease the length of the snippet"
+        description="Increase or decrease the length of the clip"
         mb="md"
         styles={(theme) => ({
           description: { marginBottom: theme.spacing.xs },

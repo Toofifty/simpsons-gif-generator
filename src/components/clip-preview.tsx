@@ -22,26 +22,27 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Snippet } from '../api';
+import { Clip, api } from '../api';
 
-interface SnippetPreviewProps {
-  snippet: Snippet;
+interface ClipPreviewProps {
+  filetype: 'gif' | 'mp4';
+  clip: Clip;
 }
 
 const f = Intl.NumberFormat('en-US');
 
-const getLink = (snippet: Snippet) => {
+const getLink = (clip: Clip) => {
   return {
     pathname: '/generate',
     search: new URLSearchParams({
-      ...snippet.options,
-      begin: snippet.subtitles[0].id,
-      end: snippet.subtitles[snippet.subtitles.length - 1].id,
+      ...clip.options,
+      begin: clip.subtitles[0].id,
+      end: clip.subtitles[clip.subtitles.length - 1].id,
     } as any).toString(),
   };
 };
 
-export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
+export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
   const [copied, setCopied] = useState(false);
 
   const [playMp4, setPlayMp4] = useState(false);
@@ -62,7 +63,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
         justify="space-between"
         sx={() => ({ position: 'relative' })}
       >
-        {snippet.options.filetype === 'mp4' ? (
+        {filetype === 'mp4' ? (
           <Box sx={() => ({ position: 'relative' })}>
             {playMp4 ? (
               <video
@@ -72,12 +73,12 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
                 controls
                 onEnded={() => setPlayMp4(false)}
               >
-                <source src={snippet.url} type="video/mp4" />
+                <source src={clip.url} type="video/mp4" />
                 Unable to load video
               </video>
             ) : (
               <>
-                <Image h={225} src={snippet.snapshot} />
+                <Image h={225} src={clip.snapshot} />
                 <Overlay>
                   <Flex justify="center" align="center" h="100%">
                     <ActionIcon
@@ -104,7 +105,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
                       zIndex: 50,
                     })}
                   >
-                    {snippet.options.filetype}
+                    {filetype}
                   </Badge>
                 </Overlay>
               </>
@@ -112,7 +113,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
           </Box>
         ) : (
           <>
-            <Image h={225} src={snippet.url} />
+            <Image h={225} src={clip.url} />
             <Badge
               variant="filled"
               color="blue"
@@ -127,29 +128,39 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
                 zIndex: 50,
               })}
             >
-              {snippet.options.filetype}
+              {filetype}
             </Badge>
           </>
         )}
-        <Box px="lg" sx={() => ({ flex: 1 })}>
+        <Box px="sm" sx={() => ({ flex: 1 })}>
           <Badge
+            mr="sm"
             leftSection={
               <ActionIcon color="blue" size="xs" variant="transparent">
                 <IconEye />
               </ActionIcon>
             }
           >
-            {f.format(snippet.views)}
+            {f.format(clip.views)}
+          </Badge>
+          <Badge
+            leftSection={
+              <ActionIcon color="blue" size="xs" variant="transparent">
+                <IconCopy />
+              </ActionIcon>
+            }
+          >
+            {f.format(clip.copies)}
           </Badge>
           <Box>
-            {snippet.subtitles.slice(0, 3).map((subtitle) => (
+            {clip.subtitles.slice(0, 3).map((subtitle) => (
               <Text key={subtitle.id} size="sm">
                 {subtitle.text}
               </Text>
             ))}
-            {snippet.subtitles.length > 3 && (
+            {clip.subtitles.length > 3 && (
               <Text size="sm" color="dimmed">
-                ... {snippet.subtitles.length - 3} more lines
+                ... {clip.subtitles.length - 3} more lines
               </Text>
             )}
           </Box>
@@ -160,13 +171,16 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
               variant="default"
               sx={() => ({ flex: 1 })}
               onClick={() => {
-                navigator.clipboard.writeText(snippet.url);
+                navigator.clipboard.writeText(clip.url);
+                // yolo
+                clip.copies++;
+                api.trackCopy({ uuid: clip.generation_uuid });
                 setCopied(true);
                 setTimeout(() => setCopied(false), 2000);
               }}
               leftIcon={<IconCopy />}
             >
-              Copy {snippet.options.filetype.toUpperCase()} URL
+              Copy {filetype.toUpperCase()} URL
             </Button>
           </Tooltip>
           <Button
@@ -175,7 +189,7 @@ export const SnippetPreview = ({ snippet }: SnippetPreviewProps) => {
             sx={() => ({ flex: 1 })}
             leftIcon={<IconExternalLink />}
             component={NavLink}
-            to={getLink(snippet)}
+            to={getLink(clip)}
           >
             Fiddle...
           </Button>

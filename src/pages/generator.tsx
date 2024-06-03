@@ -28,7 +28,6 @@ export default () => {
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   const { quote, clip, fetch: fetchRandom } = useRandomClip();
-  console.log(quote);
 
   return (
     <OptionsContext.Provider value={generation}>
@@ -54,27 +53,16 @@ export default () => {
                 },
               })}
             >
-              <Flex p="sm" direction={isMobile ? 'column' : undefined}>
-                {clip && (
-                  <Image
-                    height={90}
-                    width={120}
-                    src={clip.url}
-                    radius="sm"
-                    mr="lg"
-                  />
-                )}
-                <Text m="lg" mt="sm" size="lg" italic>
-                  {quote?.map((line, i) => {
-                    return (
-                      <>
-                        {line}
-                        {i - 1 !== quote.length ? <br /> : null}
-                      </>
-                    );
-                  })}
-                </Text>
-              </Flex>
+              <Text m="lg" size="lg" italic>
+                {quote?.map((line, i) => {
+                  return (
+                    <>
+                      {line}
+                      {i - 1 !== quote.length ? <br /> : null}
+                    </>
+                  );
+                })}
+              </Text>
             </UnstyledButton>
             <ActionIcon
               variant="subtle"
@@ -84,6 +72,17 @@ export default () => {
             >
               <IconRefresh size="1.2rem" />
             </ActionIcon>
+          </Flex>
+          <Flex mt={0} m="xl" direction="column" align="center">
+            {clip && (
+              <Image
+                height={180}
+                width={240}
+                src={clip.url}
+                radius="sm"
+                mr="lg"
+              />
+            )}
           </Flex>
           <Divider mb="xl" />
           <Stats />
