@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { api } from '../api';
+import { ClipResponseData, api } from '../api';
 import { randomQuote } from '../random-quote';
 
 let inflight = false;
 
-export const useRandomQuote = () => {
+export const useRandomClip = () => {
   const [quote, setQuote] = useState<string[]>();
-  const [snap, setSnap] = useState<string>();
   const [loading, setLoading] = useState(false);
+
+  const [clip, setClip] = useState<ClipResponseData>();
 
   const fetch = async () => {
     if (inflight) {
@@ -15,14 +16,14 @@ export const useRandomQuote = () => {
     }
     inflight = true;
     setLoading(true);
-    const response = await api.randomSnippet();
+    const response = await api.randomClip();
     if ('error' in response) {
       setQuote([randomQuote()]);
       return;
     }
 
-    setQuote(response.data.result.subtitles.map((subtitle) => subtitle.text));
-    setSnap(response.data.result.snapshot);
+    setClip(response.data);
+    setQuote(response.data.subtitles?.map((subtitle) => subtitle.text));
     setLoading(false);
 
     inflight = false;
@@ -32,5 +33,5 @@ export const useRandomQuote = () => {
     fetch();
   }, []);
 
-  return { quote, snap, loading, fetch };
+  return { quote, clip, loading, fetch };
 };

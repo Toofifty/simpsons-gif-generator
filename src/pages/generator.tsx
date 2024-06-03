@@ -16,7 +16,7 @@ import { useGenerationOptions } from '../hooks/useGenerationOptions';
 import { OptionsContext } from '../hooks/useOptionsContext';
 import { useState } from 'react';
 import { IconRefresh } from '@tabler/icons-react';
-import { useRandomQuote } from '../hooks/useRandomQuote';
+import { useRandomClip } from '../hooks/useRandomClip';
 import { useMediaQuery } from '@mantine/hooks';
 
 export default () => {
@@ -27,7 +27,7 @@ export default () => {
 
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
-  const { quote, snap, fetch: fetchRandom } = useRandomQuote();
+  const { quote, clip, fetch: fetchRandom } = useRandomClip();
   console.log(quote);
 
   return (
@@ -55,11 +55,11 @@ export default () => {
               })}
             >
               <Flex p="sm" direction={isMobile ? 'column' : undefined}>
-                {snap && (
+                {clip && (
                   <Image
                     height={90}
                     width={120}
-                    src={snap}
+                    src={clip.url}
                     radius="sm"
                     mr="lg"
                   />

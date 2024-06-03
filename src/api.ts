@@ -73,7 +73,7 @@ export interface SearchQuoteResponseData {
   }[];
 }
 
-export interface SnippetRequest {
+export interface ClipRequest {
   begin: number;
   end: number;
   extend?: number;
@@ -82,12 +82,30 @@ export interface SnippetRequest {
   subtitles?: number;
 }
 
-export interface SnippetResponseData {
+export interface ClipResponseData {
   url: string;
   uuid: string;
-  published: boolean;
   render_time: number;
+  subtitle_correction: number;
   cached: boolean;
+  clip_views: number;
+  clip_copies: number;
+  generation_views: number;
+  generation_copies: number;
+  subtitles?: { id: number; text: string }[];
+}
+
+export interface ClipsRequest {
+  filetype: string;
+  sort_by: 'views' | 'created_at' | 'episode_id';
+  order: 'asc' | 'desc';
+  offset?: number;
+  limit?: number;
+}
+
+export interface ClipsResponseData {
+  results: Clip[];
+  count: number;
 }
 
 export interface EpisodeCorrectionRequest {
@@ -105,11 +123,19 @@ export interface Snippet {
   url: string;
   snapshot: string;
   episode: { id: number };
-  published: boolean;
-  options: SnippetRequest & { filetype: 'mp4' | 'gif' | 'webm' };
+  options: ClipRequest & { filetype: 'mp4' | 'gif' | 'webm' };
   views: number;
   createdAt: string;
   updatedAt: string;
+  subtitles: { id: number; text: string }[];
+}
+
+export interface Clip {
+  episode_id: number;
+  snapshot: string;
+  url: string;
+  views: number;
+  copies: number;
   subtitles: { id: number; text: string }[];
 }
 
@@ -121,18 +147,6 @@ export interface SnippetsRequest {
 export interface SnippetsResponseData {
   results: Snippet[];
   count: number;
-}
-
-export interface RandomSnippetResponse {
-  result: Snippet;
-}
-
-export interface SnippetPublishRequest {
-  uuid: string;
-}
-
-export interface SnippetPublishResponseData {
-  message: string;
 }
 
 export interface LogsRequest {
@@ -203,12 +217,12 @@ export const api = {
     );
   },
 
-  gif(options: SnippetRequest) {
-    return this.get<SnippetRequest, SnippetResponseData>('gif', options);
+  gif(options: ClipRequest) {
+    return this.get<ClipRequest, ClipResponseData>('gif', options);
   },
 
-  mp4(options: SnippetRequest) {
-    return this.get<SnippetRequest, SnippetResponseData>('mp4', options);
+  mp4(options: ClipRequest) {
+    return this.get<ClipRequest, ClipResponseData>('mp4', options);
   },
 
   correction(options: EpisodeCorrectionRequest) {
@@ -222,14 +236,11 @@ export const api = {
     return this.get<SnippetsRequest, SnippetsResponseData>('snippets', options);
   },
 
-  randomSnippet() {
-    return this.get<{}, RandomSnippetResponse>('snippets/random');
+  clips(options: ClipsRequest) {
+    return this.get<ClipsRequest, ClipsResponseData>('clips', options);
   },
 
-  publish(uuid: string) {
-    return this.post<SnippetPublishRequest, SnippetPublishResponseData>(
-      'snippets/publish',
-      { uuid }
-    );
+  randomClip() {
+    return this.get<{}, ClipResponseData>('clips/random');
   },
 };

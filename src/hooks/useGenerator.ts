@@ -1,6 +1,6 @@
 import { notifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
-import { api, QuoteContextResponseData, SnippetResponseData } from '../api';
+import { api, QuoteContextResponseData, ClipResponseData } from '../api';
 import { assert, removeEmpty } from '../utils';
 import { isValid } from './useGenerationOptions';
 import { useOptionsContext } from './useOptionsContext';
@@ -10,7 +10,7 @@ export const useGenerator = () => {
   assert(isValid(options));
 
   const [renderIndex, rerender] = useState(0);
-  const [snippet, setSnippet] = useState<SnippetResponseData>();
+  const [snippet, setSnippet] = useState<ClipResponseData>();
   const [context, setContext] = useState<QuoteContextResponseData>();
   const [responseTime, setResponseTime] = useState<number>();
   const [loading, setLoading] = useState(false);
