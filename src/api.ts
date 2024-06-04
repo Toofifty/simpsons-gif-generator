@@ -71,6 +71,20 @@ export interface SearchQuoteResponseData {
     after: Subtitle[];
     thumbnail: string;
   }[];
+  clip_matches: {
+    clip: {
+      uuid: string;
+      subtitleBegin: number;
+      subtitleEnd: number;
+      offset: number;
+      extend: number;
+      views: number;
+      copies: number;
+    };
+    meta: MetaBundle;
+    lines: Subtitle[];
+    thumbnail: string;
+  }[];
 }
 
 export interface ClipRequest {

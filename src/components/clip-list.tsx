@@ -18,7 +18,7 @@ interface ClipListProps {
 }
 
 export const ClipList = ({ filetype, sort }: ClipListProps) => {
-  const { loading, clips, total, fetchMore } = useClips(sort);
+  const { loading, clips, total, fetchMore } = useClips(filetype, sort);
 
   if (!loading && (total === 0 || clips.length === 0)) {
     return (

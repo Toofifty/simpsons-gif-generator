@@ -78,7 +78,7 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
               </video>
             ) : (
               <>
-                <Image h={225} src={clip.snapshot} />
+                <Image w="100%" src={clip.snapshot} />
                 <Overlay>
                   <Flex justify="center" align="center" h="100%">
                     <ActionIcon
@@ -113,7 +113,7 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
           </Box>
         ) : (
           <>
-            <Image h={225} src={clip.url} />
+            <Image w="100%" src={clip.url} />
             <Badge
               variant="filled"
               color="blue"
@@ -191,7 +191,7 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
             component={NavLink}
             to={getLink(clip)}
           >
-            Fiddle...
+            Edit
           </Button>
         </Button.Group>
       </Stack>

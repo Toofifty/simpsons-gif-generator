@@ -62,7 +62,7 @@ const validate = (options: GenerationOptions) => {
 };
 
 export const useGenerationOptions = () => {
-  const [options, setOptions] = useQueryParams<GenerationOptions>(
+  const [options, setOptionState] = useQueryParams<GenerationOptions>(
     defaultOptions,
     transform
   );
@@ -83,22 +83,38 @@ export const useGenerationOptions = () => {
         out.subtitles = value !== 'mp4';
       }
 
-      return setOptions(validate(out));
+      return setOptionState(validate(out));
     },
-    [setOptions]
+    [setOptionState]
+  );
+
+  const setOptions = useCallback(
+    (options: Partial<GenerationOptions>) => {
+      const out = { ...optionsRef.current, ...options };
+
+      // enable/disable subtitles if the user
+      // switches to gif/mp4 respectively
+      if (options.filetype) {
+        out.subtitles = options.filetype !== 'mp4';
+      }
+
+      return setOptionState(validate(out));
+    },
+    [setOptionState]
   );
 
   const setRange = useCallback(
     (begin: number, end: number) =>
       // reset all options when entire range changes
       // because it defaults to gif, enable subtitles
-      setOptions(validate({ ...defaultOptions, begin, end })),
+      setOptionState(validate({ ...defaultOptions, begin, end })),
     [setOption]
   );
 
   return {
     options,
     setOption,
+    setOptions,
     setRange,
   };
 };

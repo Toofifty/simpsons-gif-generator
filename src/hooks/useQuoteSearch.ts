@@ -52,6 +52,7 @@ export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
       ...prev!,
       ...response.data,
       matches: [...prev!.matches, ...response.data.matches],
+      clip_matches: [...prev!.clip_matches, ...response.data.clip_matches],
     }));
   }, [normalized, results]);
 

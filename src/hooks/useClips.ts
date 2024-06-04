@@ -4,7 +4,10 @@ import { api, Clip } from '../api';
 
 let inflight = false;
 
-export const useClips = (sort: 'recent' | 'popular') => {
+export const useClips = (
+  filetype: 'gif' | 'mp4',
+  sort: 'recent' | 'popular'
+) => {
   const [clips, setClips] = useState<Clip[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -17,7 +20,7 @@ export const useClips = (sort: 'recent' | 'popular') => {
     inflight = true;
     setLoading(true);
     const response = await api.clips({
-      filetype: 'gif',
+      filetype,
       offset: (forceRefresh ? 0 : clips.length) || undefined,
       limit: 12,
       sort_by: sort === 'recent' ? 'created_at' : 'views',
@@ -44,7 +47,7 @@ export const useClips = (sort: 'recent' | 'popular') => {
     setClips([]);
     setTotal(0);
     fetchMore(true);
-  }, [sort]);
+  }, [sort, filetype]);
 
   return { clips, loading, total, fetchMore };
 };
