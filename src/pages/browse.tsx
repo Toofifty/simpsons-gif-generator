@@ -1,11 +1,21 @@
-import { Box, Button, Flex, Stack, Text, useMantineTheme } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Flex,
+  SegmentedControl,
+  Stack,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
 import { ClipList } from '../components/clip-list';
 import { useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
+import { withTransition } from '../util/with-transition';
+import { ClipListByEpisode } from '../components/clip-list-by-episode';
 
 export default () => {
-  const [showMp4s, setShowMp4s] = useState(false);
-  const [sortRecent, setSortRecent] = useState(false);
+  const [filetype, setFiletype] = useState<'gif' | 'mp4'>('gif');
+  const [sort, setSort] = useState<'episode' | 'popular' | 'recent'>('recent');
 
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
@@ -36,44 +46,36 @@ export default () => {
           >
             <Flex align="center" justify="space-between" gap="md">
               <Text>Show as</Text>
-              <Button.Group>
-                <Button
-                  variant={showMp4s ? 'default' : 'filled'}
-                  onClick={() => setShowMp4s(false)}
-                >
-                  GIFs
-                </Button>
-                <Button
-                  variant={showMp4s ? 'filled' : 'default'}
-                  onClick={() => setShowMp4s(true)}
-                >
-                  MP4s
-                </Button>
-              </Button.Group>
+              <SegmentedControl
+                color="blue"
+                data={[
+                  { label: 'GIFs', value: 'gif' },
+                  { label: 'MP4s', value: 'mp4' },
+                ]}
+                value={filetype}
+                onChange={withTransition(setFiletype) as any}
+              />
             </Flex>
             <Flex align="center" justify="space-between" gap="md">
               <Text>Sort by</Text>
-              <Button.Group>
-                <Button
-                  variant={sortRecent ? 'default' : 'filled'}
-                  onClick={() => setSortRecent(false)}
-                >
-                  Popularity
-                </Button>
-                <Button
-                  variant={sortRecent ? 'filled' : 'default'}
-                  onClick={() => setSortRecent(true)}
-                >
-                  Most recent
-                </Button>
-              </Button.Group>
+              <SegmentedControl
+                color="blue"
+                data={[
+                  { label: 'Episode', value: 'episode' },
+                  { label: 'Popularity', value: 'popular' },
+                  { label: 'Most recent', value: 'recent' },
+                ]}
+                value={sort}
+                onChange={withTransition(setSort) as any}
+              />
             </Flex>
           </Flex>
         </Flex>
-        <ClipList
-          filetype={showMp4s ? 'mp4' : 'gif'}
-          sort={sortRecent ? 'recent' : 'popular'}
-        />
+        {sort === 'episode' ? (
+          <ClipListByEpisode filetype={filetype} />
+        ) : (
+          <ClipList filetype={filetype} sort={sort} />
+        )}
       </Stack>
     </Box>
   );

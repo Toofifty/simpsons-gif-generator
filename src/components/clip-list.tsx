@@ -1,10 +1,4 @@
-import {
-  Anchor,
-  Flex,
-  Group,
-  Loader,
-  Text,
-} from '@mantine/core';
+import { Anchor, Flex, Group, Loader, Text } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
 import { ClipPreview } from './clip-preview';
 import { ScrollTrigger } from './scroll-trigger';

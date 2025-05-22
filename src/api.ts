@@ -129,6 +129,15 @@ export interface EpisodeCorrectionRequest {
   correction: number;
 }
 
+export interface Episode {
+  id: number;
+  seasonId: number;
+  idInSeason: number;
+  identifier: string;
+  title: string;
+  subtitleCorrection: number;
+}
+
 export interface EpisodeCorrectionResponseData {
   message: string;
 }
@@ -229,6 +238,10 @@ export const api = {
 
   mp4(options: ClipRequest) {
     return this.get<ClipRequest, ClipResponseData>('mp4', options);
+  },
+
+  episodes() {
+    return this.get<{}, Episode[]>('episode');
   },
 
   correction(options: EpisodeCorrectionRequest) {

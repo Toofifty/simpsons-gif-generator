@@ -30,7 +30,7 @@ export const App = () => {
               backgroundColor:
                 theme.colorScheme === 'dark'
                   ? theme.colors.dark[5]
-                  : theme.colors.gray[3],
+                  : theme.colors.gray[0],
             },
             '@view-transition': {
               navigation: 'auto',

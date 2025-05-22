@@ -54,7 +54,7 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
     <Paper
       shadow="md"
       w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
-      radius="sm"
+      radius="md"
       sx={() => ({ overflow: 'hidden' })}
     >
       <Stack
@@ -66,7 +66,6 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
           <Box sx={() => ({ position: 'relative' })}>
             {playMp4 ? (
               <video
-                height="100%"
                 width="100%"
                 autoPlay
                 controls
@@ -167,8 +166,9 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
         <Button.Group sx={() => ({ justifyContent: 'stretch' })}>
           <Tooltip label="Copied!" opened={copied}>
             <Button
-              variant="default"
-              sx={() => ({ flex: 1 })}
+              variant="subtle"
+              color="gray"
+              sx={{ flex: 1 }}
               onClick={() => {
                 navigator.clipboard.writeText(clip.url);
                 // yolo
@@ -183,9 +183,9 @@ export const ClipPreview = ({ filetype, clip }: ClipPreviewProps) => {
             </Button>
           </Tooltip>
           <Button
-            variant="default"
-            size="sm"
-            sx={() => ({ flex: 1 })}
+            variant="subtle"
+            color="gray"
+            sx={{ flex: 1 }}
             leftIcon={<IconExternalLink />}
             component={NavLink}
             to={getLink(clip)}
