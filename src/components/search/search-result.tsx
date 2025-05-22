@@ -38,7 +38,8 @@ interface SearchResultProps {
 }
 
 export const SearchResult = ({ result, first }: SearchResultProps) => {
-  const { setRange, setOption, setOptions } = useOptionsContext();
+  const { setRangeWithTransition, setOptionsWithTransition } =
+    useOptionsContext();
 
   const theme = useMantineTheme();
   const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
@@ -126,14 +127,14 @@ export const SearchResult = ({ result, first }: SearchResultProps) => {
         })}
         onClick={() => {
           if (result.clip) {
-            setOptions({
+            setOptionsWithTransition({
               begin: result.clip.subtitleBegin,
               end: result.clip.subtitleEnd,
               offset: result.clip.offset,
               extend: result.clip.extend,
             });
           } else {
-            setRange(
+            setRangeWithTransition(
               result.lines[0].id,
               result.lines[result.lines.length - 1].id
             );

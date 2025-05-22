@@ -31,7 +31,7 @@ export const Search = ({ value, onChange }: SearchProps) => {
           onBlur={() => setSearchFocused(false)}
         />
       </Popover.Target>
-      <Popover.Dropdown>
+      <Popover.Dropdown sx={{ viewTransitionName: 'search-results' }}>
         <SearchResults
           ref={resultsRef}
           term={value}

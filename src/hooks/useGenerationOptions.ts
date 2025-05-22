@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { TransformMap, useQueryParams } from './useQueryParams';
+import { withTransition } from '../util/with-transition';
 
 export interface GenerationOptions {
   begin?: number;
@@ -116,5 +117,8 @@ export const useGenerationOptions = () => {
     setOption,
     setOptions,
     setRange,
+    setOptionWithTransition: withTransition(setOption),
+    setOptionsWithTransition: withTransition(setOptions),
+    setRangeWithTransition: withTransition(setRange),
   };
 };

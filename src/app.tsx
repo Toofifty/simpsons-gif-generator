@@ -7,6 +7,7 @@ import {
 import { Shell } from './components/shell';
 import { Notifications } from '@mantine/notifications';
 import { Outlet } from 'react-router-dom';
+import { ViewTransition } from './components/view-transition';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
@@ -31,12 +32,17 @@ export const App = () => {
                   ? theme.colors.dark[5]
                   : theme.colors.gray[3],
             },
+            '@view-transition': {
+              navigation: 'auto',
+            },
           }),
         }}
       >
         <Notifications />
         <Shell>
-          <Outlet />
+          <ViewTransition>
+            <Outlet />
+          </ViewTransition>
         </Shell>
       </MantineProvider>
     </ColorSchemeProvider>

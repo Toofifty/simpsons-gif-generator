@@ -8,40 +8,65 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { ForwardedRef, forwardRef, useEffect } from 'react';
+import { ForwardedRef, forwardRef } from 'react';
 import { SearchQuoteResponseData } from '../../api';
 import { SearchResult } from './search-result';
 import { ScrollTrigger } from '../scroll-trigger';
-import { IconClipboard, IconScissors, IconSearch } from '@tabler/icons-react';
+import { IconScissors, IconSearch } from '@tabler/icons-react';
 
 interface SearchResultsProps {
   loading?: boolean;
   term?: string;
   results?: SearchQuoteResponseData;
+  error?: string;
   onNext: () => void;
 }
 
 export const SearchResults = forwardRef(
   (
-    { loading, term, results, onNext }: SearchResultsProps,
+    { loading, term, results, error, onNext }: SearchResultsProps,
     ref: ForwardedRef<HTMLDivElement>
   ) => {
     if (results === undefined && (term?.length ?? 0) < 5) {
-      return <Text ta="center">Term is too short</Text>;
+      return (
+        <Text ta="center" sx={{ viewTransitionName: 'search-result-text' }}>
+          Term is too short
+        </Text>
+      );
     }
 
-    if (loading || results === undefined) {
-      return <Text ta="center">Loading...</Text>;
+    if (results === undefined) {
+      return (
+        <Text ta="center" sx={{ viewTransitionName: 'search-result-text' }}>
+          Loading...
+        </Text>
+      );
+    }
+
+    if (error) {
+      return (
+        <Text ta="center" sx={{ viewTransitionName: 'search-result-text' }}>
+          Error: {error}
+        </Text>
+      );
     }
 
     const totalMatches = results.matches.length + results.clip_matches.length;
 
     if (totalMatches === 0) {
-      return <Text ta="center">No results found</Text>;
+      return (
+        <Text ta="center" sx={{ viewTransitionName: 'search-result-text' }}>
+          No results found
+        </Text>
+      );
     }
 
     return (
-      <Stack ref={ref} mah="calc(100vh - 200px)">
+      <Stack
+        ref={ref}
+        mah="calc(100vh - 200px)"
+        sx={{ opacity: loading ? 0.5 : 1 }}
+      >
         <Stack style={{ overflowY: 'auto' }} mah={580} align="center">
           {results.clip_matches.length > 0 && (
             <>

@@ -1,10 +1,8 @@
 import {
   Anchor,
-  Button,
   Flex,
   Group,
   Loader,
-  Paper,
   Text,
 } from '@mantine/core';
 import { NavLink } from 'react-router-dom';

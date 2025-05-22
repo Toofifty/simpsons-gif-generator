@@ -29,7 +29,12 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
 
   return (
     <Stack align="center">
-      <Box mah={270} maw={360} pos="relative">
+      <Box
+        mah={270}
+        maw={360}
+        pos="relative"
+        sx={{ viewTransitionName: 'clip-preview' }}
+      >
         {loading || !clip.url ? (
           <Skeleton height="270" width="360" />
         ) : (

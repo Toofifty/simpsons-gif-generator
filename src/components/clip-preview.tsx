@@ -5,7 +5,6 @@ import {
   Button,
   Flex,
   Image,
-  Loader,
   Overlay,
   Paper,
   Stack,

@@ -16,9 +16,15 @@ export const useGenerator = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(async () => {
+    let discarded = false;
+
+    (async () => {
       setLoading(true);
       const contextResponse = await api.context(removeEmpty(options));
+      if (discarded) {
+        return;
+      }
+
       if ('error' in contextResponse) {
         notifications.show({
           title: 'Error fetching quote context',
@@ -48,8 +54,10 @@ export const useGenerator = () => {
         Math.max(clipResponse.response_time, contextResponse.response_time)
       );
       setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timeout);
+    })();
+    return () => {
+      discarded = true;
+    };
   }, [JSON.stringify(options), renderIndex]);
 
   const invalidate = () => rerender((i) => i + 1);

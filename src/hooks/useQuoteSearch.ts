@@ -1,5 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useState,
+  useTransition,
+} from 'react';
 import { api, SearchQuoteResponseData } from '../api';
+import { runTransition } from '../util/with-transition';
 
 interface QuoteSearchOptions {
   term: string;
@@ -13,28 +20,40 @@ export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
 
   const [results, setResults] = useState<SearchQuoteResponseData>();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setResults(undefined);
-  }, [normalized]);
-
-  useEffect(() => {
-    const timeout = setTimeout(async () => {
+    let discarded = false;
+    (async () => {
       if (normalized.length >= 5) {
         setLoading(true);
         const response = await api.search({ term: normalized, limit: 5 });
-        if ('error' in response) {
-          console.error(response.error);
+        if (discarded) {
           return;
         }
 
-        setResults(response.data);
-        setLoading(false);
+        if ('error' in response) {
+          console.error(response.error);
+          setError(response.error);
+          setLoading(false);
+          return;
+        }
+
+        runTransition(() => {
+          setResults(response.data);
+          setLoading(false);
+          setError(undefined);
+        });
       } else {
-        setResults(undefined);
+        runTransition(() => {
+          setResults(undefined);
+        });
       }
-    }, 500);
-    return () => clearTimeout(timeout);
+    })();
+
+    return () => {
+      discarded = true;
+    };
   }, [normalized]);
 
   const fetchMore = useCallback(async () => {
@@ -56,5 +75,5 @@ export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
     }));
   }, [normalized, results]);
 
-  return { results, loading, fetchMore };
+  return { results, loading, error, fetchMore };
 };

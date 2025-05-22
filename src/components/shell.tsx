@@ -41,7 +41,13 @@ export const Shell = ({ children }: { children: ReactNode }) => {
         >
           <Flex gap="xl" justify="space-between" align="center">
             <Flex gap="xl">
-              <Anchor component={NavLink} to="/" color="#ff0" fw="bold">
+              <Anchor
+                component={NavLink}
+                to="/"
+                color="#ff0"
+                fw="bold"
+                viewTransition
+              >
                 <Flex gap="sm">
                   <Image src={Logo} width="60" />
                   <Text
@@ -54,10 +60,20 @@ export const Shell = ({ children }: { children: ReactNode }) => {
                   </Text>
                 </Flex>
               </Anchor>
-              <Anchor component={NavLink} to="/generate" color="gray">
+              <Anchor
+                component={NavLink}
+                to="/generate"
+                color="gray"
+                viewTransition
+              >
                 Generate
               </Anchor>
-              <Anchor component={NavLink} to="/browse" color="gray">
+              <Anchor
+                component={NavLink}
+                to="/browse"
+                color="gray"
+                viewTransition
+              >
                 Browse
               </Anchor>
             </Flex>
