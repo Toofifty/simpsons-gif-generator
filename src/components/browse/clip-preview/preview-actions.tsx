@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Group, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Tooltip } from '@mantine/core';
 import { useState } from 'react';
 import { api, Clip } from '../../../api';
 import {

@@ -32,6 +32,7 @@ export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
       shadow="sm"
       w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
       radius="md"
+      miw="300px"
     >
       <Stack
         spacing={0}

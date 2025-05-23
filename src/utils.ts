@@ -8,6 +8,18 @@ export const removeEmpty = <T extends Record<string, any>>(obj: T): T =>
     )
   ) as T;
 
+export const uniqueBy = <T, K extends keyof T>(arr: T[], key: K): T[] => {
+  const seen = new Set();
+  return arr.filter((item) => {
+    const value = item[key];
+    if (seen.has(value)) {
+      return false;
+    }
+    seen.add(value);
+    return true;
+  });
+};
+
 export const episodeIdentifier = (meta: MetaBundle) =>
   `S${(meta.season_number + '').padStart(2, '0')}E${(
     meta.episode_in_season + ''

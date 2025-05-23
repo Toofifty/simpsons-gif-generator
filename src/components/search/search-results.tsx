@@ -4,7 +4,6 @@ import {
   Divider,
   Flex,
   Loader,
-  Paper,
   Stack,
   Text,
 } from '@mantine/core';

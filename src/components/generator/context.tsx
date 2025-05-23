@@ -3,10 +3,7 @@ import {
   SpacingValue,
   Stack,
   SystemProp,
-  Text,
-  TextInput,
   Textarea,
-  useMantineTheme,
 } from '@mantine/core';
 import { QuoteContextResponseData } from '../../api';
 import { isValid } from '../../hooks/useGenerationOptions';

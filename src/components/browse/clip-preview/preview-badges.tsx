@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Flex, Group, Text, Tooltip } from '@mantine/core';
+import { Badge, Flex, Group, Text, Tooltip } from '@mantine/core';
 import { IconCopy, IconEye } from '@tabler/icons-react';
 
 const f = Intl.NumberFormat('en-US');
@@ -9,9 +9,9 @@ interface PreviewBadgesProps {
 }
 
 export const PreviewBadges = ({ views, copies }: PreviewBadgesProps) => (
-  <Group spacing="0">
+  <Group spacing="xs">
     <Tooltip label="Views">
-      <Badge variant="" radius="md">
+      <Badge variant="light" radius="md">
         <Flex gap="xs" align="center">
           <IconEye size={12} />
           <Text sx={{ userSelect: 'none' }}>{f.format(views)}</Text>
@@ -19,7 +19,7 @@ export const PreviewBadges = ({ views, copies }: PreviewBadgesProps) => (
       </Badge>
     </Tooltip>
     <Tooltip label="Copies">
-      <Badge variant="" radius="md">
+      <Badge variant="light" radius="md">
         <Flex gap="xs" align="center">
           <IconCopy size={12} />
           <Text sx={{ userSelect: 'none' }}>{f.format(copies)}</Text>

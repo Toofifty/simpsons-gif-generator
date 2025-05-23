@@ -1,14 +1,6 @@
-import {
-  Button,
-  Modal,
-  NumberInput,
-  Stack,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import { Button, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { useEffect } from 'react';
 import { api, QuoteContextResponseData } from '../../api';
 import { episodeIdentifier } from '../../utils';
 

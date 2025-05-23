@@ -1,93 +1,111 @@
 import {
-  Accordion,
   Anchor,
+  Badge,
   Flex,
   Group,
   Loader,
   Paper,
+  SegmentedControl,
+  Select,
   Stack,
   Text,
   Title,
+  useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core';
-import { useClipsByEpisode } from '../../hooks/useClipsByEpisode';
 import { NavLink } from 'react-router-dom';
 import { ScrollTrigger } from './scroll-trigger';
-import { range } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
+import { range, useMediaQuery } from '@mantine/hooks';
+import { useState } from 'react';
 import { PreviewCard } from './clip-preview/preview-card';
+import { withTransition } from '../../util/with-transition';
+import { useClipsBySeason } from '../../hooks/useClipsBySeason';
+import { Episode } from '../../api';
 
 interface ClipListByEpisodeProps {
   filetype: 'gif' | 'mp4';
 }
 
 export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
-  const { loading, seasons, clips, total, fetchMore } =
-    useClipsByEpisode(filetype);
+  const { colorScheme } = useMantineColorScheme();
 
-  const [seasonsVisible, setSeasonsVisible] = useState(() =>
-    range(1, 17).map(String)
+  const theme = useMantineTheme();
+  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+
+  const [seasonId, setSeasonId] = useState('1');
+  const { episodes, clips, total, loading, fetchMore } = useClipsBySeason(
+    filetype,
+    Number(seasonId)
   );
-
-  useEffect(() => {
-    setSeasonsVisible(range(1, 17).map(String));
-  }, [filetype]);
-
-  if (!loading && (total === 0 || Object.keys(seasons).length === 0)) {
-    return (
-      <Group align="center" m="xl">
-        <Text>
-          No clips available! Please try again later or{' '}
-          <Anchor component={NavLink} to="/generate">
-            generate your own
-          </Anchor>
-          .
-        </Text>
-      </Group>
-    );
-  }
 
   return (
     <>
-      <Accordion
-        chevronPosition="left"
-        multiple
-        value={seasonsVisible}
-        onChange={setSeasonsVisible}
-      >
-        {Object.entries(seasons).map(([id, episodes]) => (
-          <Accordion.Item value={id} key={id}>
-            <Accordion.Control>
-              <Title size="large">Season {id}</Title>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <Stack align="start">
-                {episodes.map((episode) => (
-                  <Paper
-                    key={episode.id}
-                    shadow="md"
-                    radius="md"
-                    p="md"
-                    mx="-md"
-                  >
-                    <Title size="medium" mb="lg">
-                      {episode.identifier.toUpperCase()} {episode.title}
-                    </Title>
-                    <Flex wrap="wrap" gap="lg">
-                      {episode.clips.map((clip) => (
-                        <PreviewCard
-                          key={clip.clip_uuid}
-                          filetype={filetype}
-                          clip={clip}
-                        />
-                      ))}
-                    </Flex>
-                  </Paper>
+      {isTablet ? (
+        <Flex align="center" justify="space-between" mt="-lg">
+          <Text>Season</Text>
+          <Select
+            data={range(1, 17).map((id) => ({
+              label: `Season ${id}`,
+              value: id.toFixed(0),
+            }))}
+            value={seasonId}
+            onChange={withTransition(setSeasonId) as any}
+            allowDeselect={false}
+          />
+        </Flex>
+      ) : (
+        <SegmentedControl
+          mt="-lg"
+          mb="lg"
+          color="blue"
+          fullWidth
+          data={range(1, 17).map((id) => ({
+            label: `S${id}`,
+            value: id.toFixed(0),
+          }))}
+          value={seasonId}
+          onChange={withTransition(setSeasonId)}
+        />
+      )}
+      {total > 0 ? (
+        <Stack align="start" justify="stretch">
+          {episodes.map((episode) => (
+            <Paper
+              key={episode.id}
+              radius="md"
+              p="md"
+              mx="-md"
+              w="calc(100% + 2rem)"
+              bg={colorScheme === 'dark' ? 'dark.6' : 'gray.1'}
+              withBorder={colorScheme === 'light'}
+            >
+              <EpisodeTitle episode={episode} />
+              <Flex wrap="wrap" gap="lg" sx={{ overflow: 'visible' }}>
+                {episode.clips.map((clip) => (
+                  <PreviewCard
+                    key={clip.clip_uuid}
+                    filetype={filetype}
+                    clip={clip}
+                  />
                 ))}
-              </Stack>
-            </Accordion.Panel>
-          </Accordion.Item>
-        ))}
-      </Accordion>
+              </Flex>
+            </Paper>
+          ))}
+        </Stack>
+      ) : (
+        <Group align="center" m="xl">
+          {!loading && (
+            <Text>
+              No clips available for season {seasonId}. Please try again later
+              or{' '}
+              <Anchor component={NavLink} to="/generate">
+                generate your own
+              </Anchor>
+              .
+            </Text>
+          )}
+        </Group>
+      )}
 
       {total > clips.length && (
         <Flex justify="center" align="center" h="100%">
@@ -99,3 +117,10 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
     </>
   );
 };
+
+const EpisodeTitle = ({ episode }: { episode: Episode }) => (
+  <Group align="center" ml="sm" mb="md">
+    <Badge variant="filled">{episode.identifier.toUpperCase()}</Badge>
+    <Title size="medium">{episode.title}</Title>
+  </Group>
+);

@@ -116,6 +116,8 @@ export interface ClipsRequest {
   order?: 'asc' | 'desc';
   offset?: number;
   limit?: number;
+  ['filter_by.episode']?: number;
+  ['filter_by.episode.season']?: number;
 }
 
 export interface ClipsResponseData {

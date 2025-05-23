@@ -1,4 +1,4 @@
-import { AspectRatio, Badge, Image, Paper, Tooltip } from '@mantine/core';
+import { AspectRatio, Badge, Image, Paper } from '@mantine/core';
 import { Clip } from '../../../api';
 
 interface GifPreviewProps {
