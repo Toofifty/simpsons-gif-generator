@@ -1,8 +1,8 @@
 import { Anchor, Flex, Group, Loader, Text } from '@mantine/core';
 import { NavLink } from 'react-router-dom';
-import { ClipPreview } from './clip-preview';
 import { ScrollTrigger } from './scroll-trigger';
-import { useClips } from '../hooks/useClips';
+import { useClips } from '../../hooks/useClips';
+import { PreviewCard } from './clip-preview/preview-card';
 
 interface ClipListProps {
   filetype: 'gif' | 'mp4';
@@ -14,7 +14,7 @@ export const ClipList = ({ filetype, sort }: ClipListProps) => {
 
   if (!loading && (total === 0 || clips.length === 0)) {
     return (
-      <Group position="center" m="xl">
+      <Group align="center" m="xl">
         <Text>
           No clips available! Please try again later or{' '}
           <Anchor component={NavLink} to="/generate">
@@ -30,7 +30,7 @@ export const ClipList = ({ filetype, sort }: ClipListProps) => {
     <>
       <Flex wrap="wrap" gap="lg">
         {clips.map((clip) => (
-          <ClipPreview key={clip.clip_uuid} filetype={filetype} clip={clip} />
+          <PreviewCard key={clip.clip_uuid} filetype={filetype} clip={clip} />
         ))}
       </Flex>
 

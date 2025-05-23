@@ -1,17 +1,17 @@
 import { Loader, Stack, Text } from '@mantine/core';
 import { useStats } from '../hooks/useStats';
 
+const f = Intl.NumberFormat('en-US');
+
 export const Stats = () => {
   const { stats, loading } = useStats();
-
-  const f = Intl.NumberFormat('en-US');
 
   if (loading || !stats) {
     return <Loader color="gray" />;
   }
 
   return (
-    <Stack>
+    <Stack spacing="xs">
       <Text color="dimmed">
         Seasons indexed: {f.format(stats!.seasons_indexed)}
       </Text>

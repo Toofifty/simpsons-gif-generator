@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  AspectRatio,
   Box,
   Divider,
   Flex,
@@ -8,6 +9,7 @@ import {
   Paper,
   Text,
   UnstyledButton,
+  useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
 import { useRandomClip } from '../hooks/useRandomClip';
@@ -20,68 +22,77 @@ interface ClipSuggestionProps {
 
 export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
   const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
 
   const { quote, clip, fetch: fetchRandom, loading } = useRandomClip();
 
   return (
     <Flex direction="column" align="center">
-      <Flex justify="center" align="center" gap="sm">
+      <Flex justify="start" align="center" gap="sm">
         <Text color={theme.colorScheme === 'dark' ? 'dark.2' : 'gray'}>
           Start searching for a quote, like:
         </Text>
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          size="xl"
-          onClick={() => fetchRandom()}
-        >
-          <IconRefresh size="1.2rem" />
+        <ActionIcon variant="subtle" size="xl" onClick={() => fetchRandom()}>
+          {loading ? (
+            <Loader
+              color={colorScheme === 'dark' ? 'white' : 'gray'}
+              size="xs"
+            />
+          ) : (
+            <IconRefresh size="1.2rem" />
+          )}
         </ActionIcon>
       </Flex>
       <Paper
         shadow="md"
-        radius="sm"
-        p="lg"
+        radius="md"
+        p="md"
         m="lg"
-        w="max-content"
+        w="calc(360px + 2rem)"
         maw="calc(100% - 2rem)"
+        opacity={loading ? 0.9 : 1}
+        sx={{ viewTransitionName: 'clip-suggestion' }}
       >
-        {loading ? (
+        {!quote ? (
           <Loader color="gray" m="xl" />
         ) : (
           <Flex direction="column" align="center" gap="lg">
-            <Flex justify="center" align="center">
-              <UnstyledButton
-                onClick={() => setSearchValue(quote?.join(' '))}
-                px="sm"
-                sx={(theme) => ({
-                  borderRadius: theme.radius.sm,
-                  ':hover': {
-                    color:
-                      theme.colorScheme === 'dark'
-                        ? 'white'
-                        : theme.colors.gray[8],
-                  },
-                })}
-              >
-                <Flex align="center" gap="lg">
-                  <IconSearch size="1.2rem" />
-                  <Text size="lg" italic>
-                    {quote?.map((line, i) => {
-                      return (
-                        <Fragment key={i}>
-                          {line}
-                          {i - 1 !== quote.length ? <br /> : null}
-                        </Fragment>
-                      );
-                    })}
-                  </Text>
-                </Flex>
-              </UnstyledButton>
-            </Flex>
-            <Divider w="100%" />
+            <UnstyledButton
+              onClick={() => setSearchValue(quote?.join(' '))}
+              px="sm"
+              sx={(theme) => ({
+                borderRadius: theme.radius.sm,
+                ':hover': {
+                  color:
+                    theme.colorScheme === 'dark'
+                      ? 'white'
+                      : theme.colors.gray[8],
+                },
+              })}
+            >
+              <Flex justify="start" align="center" gap="lg">
+                <IconSearch
+                  size="1.2rem"
+                  style={{ viewTransitionName: 'clip-suggestion-icon' }}
+                />
+                <Text size="md" italic>
+                  {quote?.map((line, i) => (
+                    <Fragment key={i}>
+                      {line}
+                      {i - 1 !== quote.length ? <br /> : null}
+                    </Fragment>
+                  ))}
+                </Text>
+              </Flex>
+            </UnstyledButton>
             {clip && (
-              <Image height={180} width={240} src={clip.url} radius="sm" />
+              <AspectRatio miw={360} ratio={4 / 3}>
+                <Image
+                  src={clip.url}
+                  radius="sm"
+                  sx={{ viewTransitionName: 'clip-suggestion-clip' }}
+                />
+              </AspectRatio>
             )}
           </Flex>
         )}

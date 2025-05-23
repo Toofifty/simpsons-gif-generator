@@ -256,7 +256,9 @@ export const api = {
   },
 
   randomClip() {
-    return this.get<{}, ClipResponseData>('clips/random');
+    return this.get<{}, ClipResponseData>('clips/random', {
+      resolution: 360,
+    });
   },
 
   trackCopy(options: TrackCopyRequest) {

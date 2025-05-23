@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ClipResponseData, api } from '../api';
 import { randomQuote } from '../random-quote';
+import { runTransition } from '../util/with-transition';
 
 let inflight = false;
 
@@ -22,9 +23,11 @@ export const useRandomClip = () => {
       return;
     }
 
-    setClip(response.data);
-    setQuote(response.data.subtitles?.map((subtitle) => subtitle.text));
-    setLoading(false);
+    runTransition(() => {
+      setClip(response.data);
+      setQuote(response.data.subtitles?.map((subtitle) => subtitle.text));
+      setLoading(false);
+    });
 
     inflight = false;
   };

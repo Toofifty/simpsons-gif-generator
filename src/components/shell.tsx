@@ -9,7 +9,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery, useWindowScroll } from '@mantine/hooks';
 import { IconMoonStars, IconSun } from '@tabler/icons-react';
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -21,25 +21,42 @@ export const Shell = ({ children }: { children: ReactNode }) => {
   const dark = colorScheme === 'dark';
 
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+  const [scroll] = useWindowScroll();
 
   return (
     <AppShell
       header={
         <Header
-          height={64}
+          height={96}
           p="lg"
-          withBorder={false}
+          withBorder={scroll.y > 0}
           styles={(theme) => ({
             root: {
+              height: scroll.y > 0 ? 64 : 96,
               backgroundColor:
                 theme.colorScheme === 'dark'
-                  ? theme.colors.dark[5]
+                  ? scroll.y > 0
+                    ? theme.colors.dark[7]
+                    : theme.colors.dark[5]
+                  : scroll.y > 0
+                  ? theme.white
                   : theme.colors.gray[0],
               zIndex: 300,
+              transition: 'background-color 0.2s, height 0.2s',
             },
           })}
         >
-          <Flex gap="xl" justify="space-between" align="center">
+          <Flex
+            h="100%"
+            gap="xl"
+            justify="space-between"
+            align="center"
+            sx={(theme) => ({
+              paddingLeft: scroll.y > 0 ? 0 : theme.spacing.xl,
+              paddingRight: scroll.y > 0 ? 0 : theme.spacing.xl,
+              transition: 'padding 0.2s',
+            })}
+          >
             <Flex gap="xl">
               <Anchor
                 component={NavLink}

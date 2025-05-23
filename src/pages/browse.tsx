@@ -7,11 +7,11 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { ClipList } from '../components/clip-list';
 import { useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
 import { withTransition } from '../util/with-transition';
-import { ClipListByEpisode } from '../components/clip-list-by-episode';
+import { ClipList } from '../components/browse/clip-list';
+import { ClipListByEpisode } from '../components/browse/clip-list-by-episode';
 
 export default () => {
   const [filetype, setFiletype] = useState<'gif' | 'mp4'>('gif');

@@ -1,7 +1,6 @@
 import {
   Accordion,
   Anchor,
-  Box,
   Flex,
   Group,
   Loader,
@@ -10,12 +9,12 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { useClipsByEpisode } from '../hooks/useClipsByEpisode';
+import { useClipsByEpisode } from '../../hooks/useClipsByEpisode';
 import { NavLink } from 'react-router-dom';
-import { ClipPreview } from './clip-preview';
 import { ScrollTrigger } from './scroll-trigger';
 import { range } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
+import { PreviewCard } from './clip-preview/preview-card';
 
 interface ClipListByEpisodeProps {
   filetype: 'gif' | 'mp4';
@@ -35,7 +34,7 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
 
   if (!loading && (total === 0 || Object.keys(seasons).length === 0)) {
     return (
-      <Group position="center" m="xl">
+      <Group align="center" m="xl">
         <Text>
           No clips available! Please try again later or{' '}
           <Anchor component={NavLink} to="/generate">
@@ -75,7 +74,7 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
                     </Title>
                     <Flex wrap="wrap" gap="lg">
                       {episode.clips.map((clip) => (
-                        <ClipPreview
+                        <PreviewCard
                           key={clip.clip_uuid}
                           filetype={filetype}
                           clip={clip}
