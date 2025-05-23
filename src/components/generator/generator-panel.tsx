@@ -4,7 +4,6 @@ import {
   Collapse,
   Divider,
   Flex,
-  Loader,
   Paper,
   Stack,
   Text,
@@ -17,45 +16,85 @@ import { GeneratorContext } from '../../hooks/useGeneratorContext';
 import { Context } from './context';
 import { Controls } from './controls';
 import { Viewer } from './viewer';
+import { EpisodeTitle, getIdentifier } from '../episode-title';
+import { ClipResponseData, QuoteContextResponseData } from '../../api';
 
 export const GeneratorPanel = () => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
-  const { context, clip, loading, responseTime, invalidate } = useGenerator();
+  const {
+    context: loadedContext,
+    clip: loadedClip,
+    loading,
+    responseTime,
+    invalidate,
+  } = useGenerator();
 
   const [mobileContextOpen, { toggle: toggleMobileContext }] =
     useDisclosure(false);
 
-  if (!context || !clip) {
-    return (
-      <Paper shadow="xl" p="xl" m="xl" maw="800px" mx="auto">
-        <Flex justify="center">
-          <Loader color="gray" mx="auto" />
-        </Flex>
-      </Paper>
-    );
-  }
+  const context =
+    loadedContext ??
+    ({
+      meta: {
+        episode_title: '',
+        season_number: 0,
+        episode_number: 0,
+        episode_in_season: 0,
+        season_title: '',
+      },
+      matches: {
+        before: [{ episode_id: 0, id: 0, text: '' } as any],
+        lines: [],
+        after: [],
+      },
+    } satisfies QuoteContextResponseData);
+  const clip =
+    loadedClip ??
+    ({
+      cached: false,
+      clip_copies: 0,
+      clip_uuid: '',
+      clip_views: 0,
+      generation_copies: 0,
+      generation_uuid: '',
+      generation_views: 0,
+      render_time: 0,
+      url: '',
+      subtitle_correction: 0,
+    } satisfies ClipResponseData);
 
   return (
     <GeneratorContext.Provider
       value={{ context, clip, loading, responseTime, invalidate }}
     >
       <Box mx="auto" maw="800px">
-        <Paper shadow="xl" p="xl" m="xl" mx="lg">
-          <Flex justify="space-between" gap="lg">
-            <Text fz="xl">
-              Season {context.meta.season_number}, Episode{' '}
-              {context.meta.episode_in_season}: {context.meta.episode_title}
-            </Text>
-          </Flex>
+        <Paper
+          shadow="xl"
+          p="xl"
+          m="xl"
+          mx="lg"
+          style={{ viewTransitionName: 'main-panel' }}
+        >
+          <EpisodeTitle
+            identifier={
+              context
+                ? getIdentifier(
+                    context.meta.season_number,
+                    context.meta.episode_number
+                  )
+                : 'S00E00'
+            }
+            title={context?.meta.episode_title ?? ''}
+          />
           <Flex
             my="lg"
             mah={isMobile ? undefined : 800}
             direction={isMobile ? 'column' : undefined}
           >
             <Stack>
-              <Viewer loading={loading} clip={clip} />
+              <Viewer loading={false} clip={clip} />
               <Divider my="lg" mb={isMobile ? 'sm' : undefined} />
               {isMobile && (
                 <>

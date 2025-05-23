@@ -32,9 +32,6 @@ export const App = () => {
                   ? theme.colors.dark[5]
                   : theme.colors.gray[0],
             },
-            '@view-transition': {
-              navigation: 'auto',
-            },
           }),
         }}
       >

@@ -1,8 +1,6 @@
 import {
   ActionIcon,
   AspectRatio,
-  Box,
-  Divider,
   Flex,
   Image,
   Loader,
@@ -15,6 +13,14 @@ import {
 import { useRandomClip } from '../hooks/useRandomClip';
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { Fragment } from 'react';
+
+// remove all non-alphanumeric characters
+const normalize = (str: string) =>
+  str
+    .replace(/[^a-zA-Z ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
 
 interface ClipSuggestionProps {
   setSearchValue: (value?: string) => void;
@@ -58,7 +64,7 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
         ) : (
           <Flex direction="column" align="center" gap="lg">
             <UnstyledButton
-              onClick={() => setSearchValue(quote?.join(' '))}
+              onClick={() => setSearchValue(normalize(quote.join(' ')))}
               px="sm"
               sx={(theme) => ({
                 borderRadius: theme.radius.sm,

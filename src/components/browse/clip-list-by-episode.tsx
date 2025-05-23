@@ -9,7 +9,6 @@ import {
   Select,
   Stack,
   Text,
-  Title,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
@@ -20,7 +19,7 @@ import { useState } from 'react';
 import { PreviewCard } from './clip-preview/preview-card';
 import { withTransition } from '../../util/with-transition';
 import { useClipsBySeason } from '../../hooks/useClipsBySeason';
-import { Episode } from '../../api';
+import { EpisodeTitle } from '../episode-title';
 
 interface ClipListByEpisodeProps {
   filetype: 'gif' | 'mp4';
@@ -79,7 +78,12 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
               bg={colorScheme === 'dark' ? 'dark.6' : 'gray.1'}
               withBorder={colorScheme === 'light'}
             >
-              <EpisodeTitle episode={episode} />
+              <EpisodeTitle
+                identifier={episode.identifier}
+                title={episode.title}
+                ml="sm"
+                mb="md"
+              />
               <Flex wrap="wrap" gap="lg" sx={{ overflow: 'visible' }}>
                 {episode.clips.map((clip) => (
                   <PreviewCard
@@ -117,10 +121,3 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
     </>
   );
 };
-
-const EpisodeTitle = ({ episode }: { episode: Episode }) => (
-  <Group align="center" ml="sm" mb="md">
-    <Badge variant="filled">{episode.identifier.toUpperCase()}</Badge>
-    <Title size="medium">{episode.title}</Title>
-  </Group>
-);

@@ -3,7 +3,6 @@ import {
   Button,
   Image,
   LoadingOverlay,
-  Skeleton,
   Stack,
   Tooltip,
   useMantineTheme,
@@ -33,36 +32,30 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
         mah={270}
         maw={360}
         pos="relative"
-        sx={{ viewTransitionName: 'clip-preview' }}
+        style={{ viewTransitionName: 'main-viewer' }}
       >
-        {loading || !clip.url ? (
-          <Skeleton height="270" width="360" />
-        ) : (
-          <>
-            {filetype === 'mp4' && (
-              <video
-                height="270"
-                width="360"
-                controls
-                loop
-                autoPlay
-                style={{ borderRadius: theme.radius.sm }}
-              >
-                <source src={clip.url} type="video/mp4" />
-                Unable to load video
-              </video>
-            )}
-            {filetype !== 'mp4' && (
-              <Image
-                radius="sm"
-                fit="contain"
-                width="360"
-                height="270"
-                src={clip.url}
-                withPlaceholder
-              />
-            )}
-          </>
+        {filetype === 'mp4' && (
+          <video
+            height="270"
+            width="360"
+            controls
+            loop
+            autoPlay
+            style={{ borderRadius: theme.radius.sm }}
+          >
+            <source src={clip.url} type="video/mp4" />
+            Unable to load video
+          </video>
+        )}
+        {filetype !== 'mp4' && (
+          <Image
+            radius="sm"
+            fit="contain"
+            width="360"
+            height="270"
+            src={clip.url}
+            withPlaceholder
+          />
         )}
         <LoadingOverlay visible={!!loading} overlayBlur={2} />
       </Box>
@@ -70,13 +63,17 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
         <Button
           variant="default"
           leftIcon={<IconDownload />}
-          onClick={() => download(clip.url)}
+          onClick={clip ? () => download(clip.url) : undefined}
         >
           Download {filetype.toLocaleUpperCase()}
         </Button>
         <Tooltip label="Copied!" opened={copied}>
           <Button
             onClick={() => {
+              if (!clip) {
+                return;
+              }
+
               navigator.clipboard.writeText(clip.url);
               api.trackCopy({ uuid: clip.generation_uuid });
               setCopied(true);

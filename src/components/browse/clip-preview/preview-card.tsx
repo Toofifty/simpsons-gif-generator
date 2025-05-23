@@ -11,9 +11,10 @@ import { Clip } from '../../../api';
 import { GifPreview } from './gif-preview';
 import { MP4Preview } from './mp4-preview';
 import { PreviewBadges } from './preview-badges';
-import { PreviewActions } from './preview-actions';
+import { getLink, PreviewActions } from './preview-actions';
 import { PreviewSubtitles } from './preview-subtitles';
 import { useState } from 'react';
+import { useRRViewTransition } from '../../../hooks/useRRViewTransition';
 
 interface PreviewCardProps {
   filetype: 'gif' | 'mp4';
@@ -27,12 +28,18 @@ export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
 
   const [showTranscript, setShowTranscript] = useState(false);
 
+  const { vt } = useRRViewTransition({
+    location: getLink(clip),
+    match: 'both',
+  });
+
   return (
     <Paper
       shadow="sm"
       w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
       radius="md"
       miw="300px"
+      style={vt('main-panel')}
     >
       <Stack
         spacing={0}
@@ -40,11 +47,15 @@ export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
         justify="space-between"
         style={{ position: 'relative' }}
       >
-        {filetype === 'mp4' ? (
-          <MP4Preview clip={clip} />
-        ) : (
-          <GifPreview clip={clip} />
-        )}
+        <Box p="xs">
+          <Box style={vt('main-viewer')}>
+            {filetype === 'mp4' ? (
+              <MP4Preview clip={clip} />
+            ) : (
+              <GifPreview clip={clip} />
+            )}
+          </Box>
+        </Box>
         <Box p="xs" pt="0" style={{ flex: 1 }}>
           <Flex justify="space-between" align="center">
             <PreviewBadges views={clip.views} copies={clip.copies} />

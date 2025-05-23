@@ -37,7 +37,8 @@ export const useQueryParams = <T extends Record<string, any>>(
     setSearchParams(
       typeof next === 'function'
         ? (prev) => next(toObject<T>(prev, transform))
-        : new URLSearchParams(withoutEmpties(next))
+        : new URLSearchParams(withoutEmpties(next)),
+      { replace: true }
     );
   }, []);
 

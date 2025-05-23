@@ -6,8 +6,8 @@ interface ViewTransitionProps {
 
 export const ViewTransition = ({ children }: ViewTransitionProps) => {
   return (
-    <Flex sx={{ display: 'contents', viewTransitionName: 'content' }}>
-      {children}
-    </Flex>
+    // <Flex sx={{ display: 'contents', viewTransitionName: 'content' }}>
+    children
+    // </Flex>
   );
 };

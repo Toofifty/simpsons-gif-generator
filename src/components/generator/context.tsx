@@ -4,6 +4,7 @@ import {
   Stack,
   SystemProp,
   Textarea,
+  Tooltip,
 } from '@mantine/core';
 import { QuoteContextResponseData } from '../../api';
 import { isValid } from '../../hooks/useGenerationOptions';
@@ -85,7 +86,6 @@ export const Context = ({ context, ml }: ContextProps) => {
           >
             <Textarea
               autosize
-              m="0"
               value={substitutions[id] ?? text.trim().replace('\n', ' ')}
               variant="filled"
               disabled={id < options.begin || id > options.end}
@@ -97,17 +97,19 @@ export const Context = ({ context, ml }: ContextProps) => {
               }}
               rightSection={
                 substitutions[id] ? (
-                  <ActionIcon
-                    onClick={() => {
-                      setSubstitutions((subs) => {
-                        const copy = { ...subs };
-                        delete copy[id];
-                        return copy;
-                      });
-                    }}
-                  >
-                    <IconX />
-                  </ActionIcon>
+                  <Tooltip label="Reset custom text">
+                    <ActionIcon
+                      onClick={() => {
+                        setSubstitutions((subs) => {
+                          const copy = { ...subs };
+                          delete copy[id];
+                          return copy;
+                        });
+                      }}
+                    >
+                      <IconX size="14" />
+                    </ActionIcon>
+                  </Tooltip>
                 ) : undefined
               }
             />

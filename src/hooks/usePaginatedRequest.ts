@@ -56,8 +56,10 @@ export const usePaginatedRequest = <T extends PaginatedData<unknown>>({
 }: PaginatedRequestOptions<T>) => {
   const key = `${cacheKey}/${dependencies.join('.')}`;
 
-  const [results, setResults] = useState<Results<T>>([]);
-  const [total, setTotal] = useState(0);
+  const [results, setResults] = useState<Results<T>>(
+    () => cache.get<T>(key).results
+  );
+  const [total, setTotal] = useState(() => cache.get<T>(key).count);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const inflight = useRef(false);

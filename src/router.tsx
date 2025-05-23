@@ -11,9 +11,15 @@ export const router = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
-      { path: '/', element: <Navigate to="/generate" /> },
+      { path: '/', element: <Navigate to="/generate" replace /> },
       { path: '/generate', element: <GeneratorPageLazy /> },
-      { path: '/browse', element: <BrowsePageLazy /> },
+      { path: '/browse', element: <Navigate to="/browse/recent" replace /> },
+      { path: '/browse/:sort', element: <BrowsePageLazy /> },
+      { path: '/browse/:sort/:season', element: <BrowsePageLazy /> },
+      {
+        path: '/browse/:sort/:season/episode/:episode',
+        element: <BrowsePageLazy />,
+      },
       { path: '/logs', element: <LogsPageLazy /> },
     ],
   },

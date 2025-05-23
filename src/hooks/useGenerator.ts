@@ -62,5 +62,5 @@ export const useGenerator = () => {
 
   const invalidate = () => rerender((i) => i + 1);
 
-  return { clip, context, loading, responseTime, invalidate };
+  return { clip, context, loading: loading || true, responseTime, invalidate };
 };

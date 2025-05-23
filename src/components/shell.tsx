@@ -87,7 +87,7 @@ export const Shell = ({ children }: { children: ReactNode }) => {
               </Anchor>
               <Anchor
                 component={NavLink}
-                to="/browse"
+                to="/browse/recent"
                 color="gray"
                 viewTransition
               >

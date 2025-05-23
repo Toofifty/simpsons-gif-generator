@@ -3,12 +3,13 @@ import { Clip } from '../../../api';
 
 interface GifPreviewProps {
   clip: Clip;
+  style?: React.CSSProperties;
 }
 
-export const GifPreview = ({ clip }: GifPreviewProps) => (
-  <Paper m="xs" radius="sm" pos="relative" sx={{ overflow: 'hidden' }}>
+export const GifPreview = ({ clip, style }: GifPreviewProps) => (
+  <Paper radius="sm" pos="relative" sx={{ overflow: 'hidden' }}>
     <AspectRatio ratio={4 / 3}>
-      <Image src={clip.url} />
+      <Image src={clip.url} style={style} />
     </AspectRatio>
     <Badge
       variant="filled"

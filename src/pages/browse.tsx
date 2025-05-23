@@ -11,13 +11,21 @@ import { useMediaQuery } from '@mantine/hooks';
 import { withTransition } from '../util/with-transition';
 import { ClipList } from '../components/browse/clip-list';
 import { ClipListByEpisode } from '../components/browse/clip-list-by-episode';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 export default () => {
   const [filetype, setFiletype] = useState<'gif' | 'mp4'>('gif');
-  const [sort, setSort] = useState<'episode' | 'popular' | 'recent'>('recent');
+  const { sort } = useParams<{
+    sort: 'season' | 'popular' | 'recent';
+  }>();
+  const navigate = useNavigate();
 
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+
+  if (!sort || !['season', 'popular', 'recent'].includes(sort)) {
+    return <Navigate to="/browse/recent" replace />;
+  }
 
   return (
     <>
@@ -61,17 +69,17 @@ export default () => {
                 <SegmentedControl
                   color="blue"
                   data={[
-                    { label: 'Episode', value: 'episode' },
+                    { label: 'Episode', value: 'season' },
                     { label: 'Popularity', value: 'popular' },
                     { label: 'Most recent', value: 'recent' },
                   ]}
                   value={sort}
-                  onChange={withTransition(setSort) as any}
+                  onChange={(v) => navigate(`/browse/${v}`)}
                 />
               </Flex>
             </Flex>
           </Flex>
-          {sort === 'episode' ? (
+          {sort === 'season' ? (
             <ClipListByEpisode filetype={filetype} />
           ) : (
             <ClipList filetype={filetype} sort={sort} />
