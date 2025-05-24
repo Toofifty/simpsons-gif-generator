@@ -50,13 +50,12 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
         </ActionIcon>
       </Flex>
       <Paper
-        shadow="md"
+        withBorder
         radius="md"
         p="md"
         m="lg"
         w="calc(360px + 2rem)"
         maw="calc(100% - 2rem)"
-        opacity={loading ? 0.9 : 1}
         sx={{ viewTransitionName: 'clip-suggestion' }}
       >
         {!quote ? (

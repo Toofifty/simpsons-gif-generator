@@ -74,7 +74,9 @@ export default () => {
                     { label: 'Most recent', value: 'recent' },
                   ]}
                   value={sort}
-                  onChange={(v) => navigate(`/browse/${v}`)}
+                  onChange={(v) =>
+                    navigate(`/browse/${v}`, { viewTransition: true })
+                  }
                 />
               </Flex>
             </Flex>

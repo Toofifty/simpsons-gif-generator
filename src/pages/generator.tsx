@@ -21,8 +21,10 @@ export default () => {
       ) : (
         <Box mx="auto" m="xl" maw={900} ta="center">
           <ClipSuggestion setSearchValue={setSearchValue} />
-          <Divider my="xl" />
-          <Stats />
+          <Box style={{ viewTransitionName: 'stats' }}>
+            <Divider my="xl" />
+            <Stats />
+          </Box>
         </Box>
       )}
     </OptionsContext.Provider>

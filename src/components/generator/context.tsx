@@ -21,7 +21,7 @@ interface ContextProps {
 }
 
 export const Context = ({ context, ml }: ContextProps) => {
-  const { options, setOption } = useOptionsContext();
+  const { options, setOption, setOptions } = useOptionsContext();
   assert(isValid(options));
 
   const [substitutions, setSubstitutions] = useState<Record<number, string>>(
@@ -57,6 +57,18 @@ export const Context = ({ context, ml }: ContextProps) => {
     ...context.matches.after,
   ];
 
+  const [localRange, setLocalRange] = useState(() => ({
+    begin: options.begin,
+    end: options.end,
+  }));
+
+  useEffect(() => {
+    setLocalRange({
+      begin: options.begin,
+      end: options.end,
+    });
+  }, [options.begin, options.end]);
+
   return (
     <Stack
       ml={ml}
@@ -67,28 +79,46 @@ export const Context = ({ context, ml }: ContextProps) => {
       }}
     >
       <VerticalSlider
-        startIndex={options.begin - firstRenderedId}
-        endIndex={options.end - firstRenderedId}
+        startIndex={localRange.begin - firstRenderedId}
+        endIndex={localRange.end - firstRenderedId}
         setRange={(startIndex, endIndex) => {
-          if (options.begin - firstRenderedId !== startIndex) {
-            setOption('begin', startIndex + firstRenderedId);
-          }
+          setLocalRange((r) => {
+            const newRange = { ...r };
 
-          if (options.end - firstRenderedId !== endIndex) {
-            setOption('end', endIndex + firstRenderedId);
-          }
+            if (r.begin - firstRenderedId !== startIndex) {
+              newRange.begin = startIndex + firstRenderedId;
+            }
+
+            if (r.end - firstRenderedId !== endIndex) {
+              newRange.end = endIndex + firstRenderedId;
+            }
+
+            if (newRange.begin !== r.begin && newRange.begin > newRange.end) {
+              newRange.end = newRange.begin;
+            }
+
+            if (newRange.end !== r.end && newRange.end < newRange.begin) {
+              newRange.begin = newRange.end;
+            }
+
+            return newRange;
+          });
+        }}
+        onDrop={() => {
+          setOptions(localRange);
         }}
       >
         {lines.map(({ id, text }) => (
           <SliderOption
             key={id}
-            active={id >= options.begin && id < options.end}
+            active={id >= localRange.begin && id < localRange.end}
           >
             <Textarea
               autosize
+              styles={{ input: { border: 'none', lineHeight: 1.5 } }}
               value={substitutions[id] ?? text.trim().replace('\n', ' ')}
               variant="filled"
-              disabled={id < options.begin || id > options.end}
+              disabled={id < localRange.begin || id > localRange.end}
               onChange={(e) => {
                 setSubstitutions((subs) => ({
                   ...subs,

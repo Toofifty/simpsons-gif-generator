@@ -35,7 +35,7 @@ export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
 
   return (
     <Paper
-      shadow="sm"
+      withBorder
       w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
       radius="md"
       miw="300px"
@@ -78,7 +78,7 @@ export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
               pos="absolute"
               w="100%"
               top="calc(100% - 0.5rem)"
-              shadow="sm"
+              withBorder
               p="sm"
               style={styles}
               sx={{ zIndex: 1000 }}

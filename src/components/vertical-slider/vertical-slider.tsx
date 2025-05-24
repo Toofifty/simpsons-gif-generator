@@ -39,6 +39,7 @@ interface VerticalSliderProps {
   startIndex: number;
   endIndex: number;
   setRange: (startIndex: number, endIndex: number) => void;
+  onDrop?: () => void;
 }
 
 export const VerticalSlider = ({
@@ -46,6 +47,7 @@ export const VerticalSlider = ({
   startIndex,
   endIndex,
   setRange,
+  onDrop,
 }: VerticalSliderProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [dragY, setDragY] = useState<number>();
@@ -87,6 +89,7 @@ export const VerticalSlider = ({
     if (!isDragging) {
       setDraggingHandle(undefined);
       setDragY(undefined);
+      onDrop?.();
     }
   }, [isDragging, dragY, startY, endY]);
 

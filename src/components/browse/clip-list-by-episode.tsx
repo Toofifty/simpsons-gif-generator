@@ -12,30 +12,40 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { ScrollTrigger } from './scroll-trigger';
 import { range, useMediaQuery } from '@mantine/hooks';
-import { useState } from 'react';
 import { PreviewCard } from './clip-preview/preview-card';
-import { withTransition } from '../../util/with-transition';
 import { useClipsBySeason } from '../../hooks/useClipsBySeason';
 import { EpisodeTitle } from '../episode-title';
+import { Clip, Episode } from '../../api';
 
 interface ClipListByEpisodeProps {
   filetype: 'gif' | 'mp4';
 }
 
 export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
-  const { colorScheme } = useMantineColorScheme();
-
   const theme = useMantineTheme();
   const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
 
-  const [seasonId, setSeasonId] = useState('1');
+  const { season: seasonId } = useParams<{ season: string }>();
+  const safeSeasonId =
+    isNaN(Number(seasonId)) || Number(seasonId) < 1 || Number(seasonId) > 17
+      ? '1'
+      : seasonId;
+
   const { episodes, clips, total, loading, fetchMore } = useClipsBySeason(
     filetype,
-    Number(seasonId)
+    Number(safeSeasonId)
   );
+
+  const navigate = useNavigate();
+  const setSeasonId = (id: string) =>
+    navigate(`/browse/season/${id}`, { viewTransition: true });
+
+  if (safeSeasonId !== seasonId) {
+    return <Navigate to="/browse/season/1" />;
+  }
 
   return (
     <>
@@ -45,10 +55,10 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
           <Select
             data={range(1, 17).map((id) => ({
               label: `Season ${id}`,
-              value: id.toFixed(0),
+              value: String(id),
             }))}
-            value={seasonId}
-            onChange={withTransition(setSeasonId) as any}
+            value={safeSeasonId}
+            onChange={setSeasonId}
             allowDeselect={false}
           />
         </Flex>
@@ -60,40 +70,20 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
           fullWidth
           data={range(1, 17).map((id) => ({
             label: `S${id}`,
-            value: id.toFixed(0),
+            value: String(id),
           }))}
-          value={seasonId}
-          onChange={withTransition(setSeasonId)}
+          value={safeSeasonId}
+          onChange={setSeasonId}
         />
       )}
       {total > 0 ? (
         <Stack align="start" justify="stretch">
           {episodes.map((episode) => (
-            <Paper
+            <EpisodeBox
               key={episode.id}
-              radius="md"
-              p="md"
-              mx="-md"
-              w="calc(100% + 2rem)"
-              bg={colorScheme === 'dark' ? 'dark.6' : 'gray.1'}
-              withBorder={colorScheme === 'light'}
-            >
-              <EpisodeTitle
-                identifier={episode.identifier}
-                title={episode.title}
-                ml="sm"
-                mb="md"
-              />
-              <Flex wrap="wrap" gap="lg" sx={{ overflow: 'visible' }}>
-                {episode.clips.map((clip) => (
-                  <PreviewCard
-                    key={clip.clip_uuid}
-                    filetype={filetype}
-                    clip={clip}
-                  />
-                ))}
-              </Flex>
-            </Paper>
+              filetype={filetype}
+              episode={episode}
+            />
           ))}
         </Stack>
       ) : (
@@ -119,5 +109,39 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
         </Flex>
       )}
     </>
+  );
+};
+
+const EpisodeBox = ({
+  filetype,
+  episode,
+}: {
+  filetype: 'gif' | 'mp4';
+  episode: Episode & { clips: Clip[] };
+}) => {
+  const { colorScheme } = useMantineColorScheme();
+
+  return (
+    <Paper
+      key={episode.id}
+      radius="md"
+      p="md"
+      mx="-md"
+      w="calc(100% + 2rem)"
+      bg={colorScheme === 'dark' ? 'dark.6' : 'gray.1'}
+      withBorder={colorScheme === 'light'}
+    >
+      <EpisodeTitle
+        identifier={episode.identifier}
+        title={episode.title}
+        ml="sm"
+        mb="md"
+      />
+      <Flex wrap="wrap" gap="lg" sx={{ overflow: 'visible' }}>
+        {episode.clips.map((clip) => (
+          <PreviewCard key={clip.clip_uuid} filetype={filetype} clip={clip} />
+        ))}
+      </Flex>
+    </Paper>
   );
 };

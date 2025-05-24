@@ -10,7 +10,11 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconChevronUp,
+} from '@tabler/icons-react';
 import { useGenerator } from '../../hooks/useGenerator';
 import { GeneratorContext } from '../../hooks/useGeneratorContext';
 import { Context } from './context';
@@ -18,6 +22,7 @@ import { Controls } from './controls';
 import { Viewer } from './viewer';
 import { EpisodeTitle, getIdentifier } from '../episode-title';
 import { ClipResponseData, QuoteContextResponseData } from '../../api';
+import { NavLink } from 'react-router-dom';
 
 export const GeneratorPanel = () => {
   const theme = useMantineTheme();
@@ -71,23 +76,34 @@ export const GeneratorPanel = () => {
     >
       <Box mx="auto" maw="800px">
         <Paper
-          shadow="xl"
+          withBorder
           p="xl"
           m="xl"
           mx="lg"
           style={{ viewTransitionName: 'main-panel' }}
         >
-          <EpisodeTitle
-            identifier={
-              context
-                ? getIdentifier(
-                    context.meta.season_number,
-                    context.meta.episode_number
-                  )
-                : 'S00E00'
-            }
-            title={context?.meta.episode_title ?? ''}
-          />
+          <Flex gap="sm" justify="space-between">
+            <EpisodeTitle
+              identifier={
+                context
+                  ? getIdentifier(
+                      context.meta.season_number,
+                      context.meta.episode_number
+                    )
+                  : 'S00E00'
+              }
+              title={context?.meta.episode_title ?? ''}
+            />
+            <Button
+              variant="default"
+              color="gray"
+              rightIcon={<IconChevronRight />}
+              component={NavLink}
+              to={`/browse/season/${context.meta.season_number}`}
+            >
+              Browse season {context.meta.season_number}
+            </Button>
+          </Flex>
           <Flex
             my="lg"
             mah={isMobile ? undefined : 800}

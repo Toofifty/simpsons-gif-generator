@@ -23,6 +23,10 @@ export const useQuoteSearch = ({ term }: QuoteSearchOptions) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    if (!term && !results) {
+      return;
+    }
+
     let discarded = false;
     (async () => {
       if (normalized.length >= 5) {
