@@ -17,7 +17,7 @@ import { Fragment } from 'react';
 // remove all non-alphanumeric characters
 const normalize = (str: string) =>
   str
-    .replace(/[^a-zA-Z ]/g, '')
+    .replace(/[^a-zA-Z0-9 ]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();

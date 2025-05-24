@@ -20,7 +20,7 @@ export const matchLocation = (l1: MinimalLocation) => (l2: MinimalLocation) => {
 };
 
 export const matchesGenerator = (location: MinimalLocation) =>
-  location.pathname?.startsWith('/generate') ?? false;
+  (location.pathname?.startsWith('/generate') && !!location.search) ?? false;
 
 interface RRViewTransitionOptions {
   location?: MinimalLocation;

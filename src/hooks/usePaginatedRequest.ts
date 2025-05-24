@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { APIError, APIResponse } from '../api';
 import { notifications } from '@mantine/notifications';
 
@@ -108,7 +108,7 @@ export const usePaginatedRequest = <T extends PaginatedData<unknown>>({
     inflight.current = false;
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setResults([]);
     setTotal(0);
     setLoading(false);
