@@ -21,7 +21,8 @@ export default () => {
   const navigate = useNavigate();
 
   const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   if (!sort || !['season', 'popular', 'recent'].includes(sort)) {
     return <Navigate to="/browse/recent" replace />;
@@ -31,13 +32,13 @@ export default () => {
     <>
       <style>{`body { overflow-y: scroll; overflow-x: hidden; }`}</style>
       <Box mx="auto" maw="calc(1200px + 6.75rem)">
-        <Stack m="xl" mt="0">
+        <Stack m="sm" mt="0">
           <Flex
             justify="space-between"
-            align={isMobile ? 'space-between' : 'center'}
+            align={isTablet ? 'space-between' : 'center'}
             mb="lg"
             gap="lg"
-            direction={isMobile ? 'column' : undefined}
+            direction={isTablet ? 'column' : undefined}
           >
             <Flex direction="column" style={{ flexShrink: 1 }}>
               <Text component="h1" size="2rem" my={0}>
@@ -49,8 +50,8 @@ export default () => {
             </Flex>
             <Flex
               gap="md"
-              direction={isMobile ? 'column' : undefined}
-              justify={isMobile ? undefined : 'flex-end'}
+              direction={isTablet ? 'column' : undefined}
+              justify={isTablet ? undefined : 'flex-end'}
             >
               <Flex align="center" justify="space-between" gap="md">
                 <Text>Show</Text>

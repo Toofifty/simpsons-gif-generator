@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 import { UNSAFE_ViewTransitionContext } from 'react-router-dom';
+import { assert } from '../utils';
 
 type MinimalLocation = {
-  pathname: string;
-  search: string;
+  pathname?: string;
+  search?: string;
 };
 
-const matchLocation = (l1: MinimalLocation, l2: MinimalLocation) => {
+export const matchLocation = (l1: MinimalLocation) => (l2: MinimalLocation) => {
   if (l1.pathname !== l2.pathname) return false;
   const l1Params = new URLSearchParams(l1.search);
   const l2Params = new URLSearchParams(l2.search);
@@ -18,30 +19,32 @@ const matchLocation = (l1: MinimalLocation, l2: MinimalLocation) => {
   );
 };
 
+export const matchesGenerator = (location: MinimalLocation) =>
+  location.pathname?.startsWith('/generate') ?? false;
+
 interface RRViewTransitionOptions {
-  location: {
-    pathname: string;
-    search: string;
-  };
+  location?: MinimalLocation;
   match: 'from' | 'to' | 'both';
-  matcher?: (l1: MinimalLocation, l2: MinimalLocation) => boolean;
+  matcher?: (location: MinimalLocation) => boolean;
 }
 
 export const useRRViewTransition = ({
   location,
   match,
-  matcher = matchLocation,
+  matcher,
 }: RRViewTransitionOptions) => {
+  assert(location || matcher, 'Either location or matcher must be provided');
+
+  const matchFn = matcher ?? matchLocation(location!);
+
   let matchesFrom = false;
   let matchesTo = false;
   const ctx = useContext(UNSAFE_ViewTransitionContext);
   if (ctx.isTransitioning) {
     matchesFrom =
-      (match === 'from' || match === 'both') &&
-      matcher(location, ctx.currentLocation);
+      (match === 'from' || match === 'both') && matchFn(ctx.currentLocation);
     matchesTo =
-      (match === 'to' || match === 'both') &&
-      matcher(location, ctx.nextLocation);
+      (match === 'to' || match === 'both') && matchFn(ctx.nextLocation);
   }
 
   return {

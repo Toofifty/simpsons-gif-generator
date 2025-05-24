@@ -19,9 +19,10 @@ import { useRRViewTransition } from '../../../hooks/useRRViewTransition';
 interface PreviewCardProps {
   filetype: 'gif' | 'mp4';
   clip: Clip;
+  style?: React.CSSProperties;
 }
 
-export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
+export const PreviewCard = ({ filetype, clip, style }: PreviewCardProps) => {
   const theme = useMantineTheme();
   const isMedium = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
   const isSmall = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
@@ -39,7 +40,7 @@ export const PreviewCard = ({ filetype, clip }: PreviewCardProps) => {
       w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
       radius="md"
       miw="300px"
-      style={vt('main-panel')}
+      style={{ ...style, ...vt('main-panel') }}
     >
       <Stack
         spacing={0}

@@ -1,6 +1,5 @@
 import {
   Anchor,
-  Badge,
   Flex,
   Group,
   Loader,
@@ -13,12 +12,20 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { Navigate, NavLink, useNavigate, useParams } from 'react-router-dom';
-import { ScrollTrigger } from './scroll-trigger';
+import { ScrollTrigger } from '../scroll-trigger';
 import { range, useMediaQuery } from '@mantine/hooks';
 import { PreviewCard } from './clip-preview/preview-card';
 import { useClipsBySeason } from '../../hooks/useClipsBySeason';
 import { EpisodeTitle } from '../episode-title';
 import { Clip, Episode } from '../../api';
+import {
+  SlideInTransition,
+  SlideInTransitionCSS,
+} from '../slide-in-transition';
+import {
+  matchesGenerator,
+  useRRViewTransition,
+} from '../../hooks/useRRViewTransition';
 
 interface ClipListByEpisodeProps {
   filetype: 'gif' | 'mp4';
@@ -43,12 +50,18 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
   const setSeasonId = (id: string) =>
     navigate(`/browse/season/${id}`, { viewTransition: true });
 
+  const { isTransitioning } = useRRViewTransition({
+    match: 'both',
+    matcher: matchesGenerator,
+  });
+
   if (safeSeasonId !== seasonId) {
     return <Navigate to="/browse/season/1" />;
   }
 
   return (
     <>
+      <SlideInTransitionCSS />
       {isTablet ? (
         <Flex align="center" justify="space-between" mt="-lg">
           <Text>Season</Text>
@@ -79,11 +92,16 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
       {total > 0 ? (
         <Stack align="start" justify="stretch">
           {episodes.map((episode) => (
-            <EpisodeBox
-              key={episode.id}
-              filetype={filetype}
-              episode={episode}
-            />
+            <SlideInTransition key={episode.id} skip={isTransitioning}>
+              {(style) => (
+                <EpisodeBox
+                  key={episode.id}
+                  filetype={filetype}
+                  episode={episode}
+                  style={style}
+                />
+              )}
+            </SlideInTransition>
           ))}
         </Stack>
       ) : (
@@ -115,9 +133,11 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
 const EpisodeBox = ({
   filetype,
   episode,
+  style,
 }: {
   filetype: 'gif' | 'mp4';
   episode: Episode & { clips: Clip[] };
+  style?: React.CSSProperties;
 }) => {
   const { colorScheme } = useMantineColorScheme();
 
@@ -130,6 +150,7 @@ const EpisodeBox = ({
       w="calc(100% + 2rem)"
       bg={colorScheme === 'dark' ? 'dark.6' : 'gray.1'}
       withBorder={colorScheme === 'light'}
+      style={style}
     >
       <EpisodeTitle
         identifier={episode.identifier}

@@ -1,16 +1,18 @@
-import { Text } from '@mantine/core';
+import { Box, MantineStyleSystemProps, Text } from '@mantine/core';
 import { useEffect } from 'react';
 
 interface ScrollTriggerProps {
   id: string;
   children: React.ReactNode;
   onIntersect?: () => void;
+  offset?: MantineStyleSystemProps['mt'];
 }
 
 export const ScrollTrigger = ({
   id,
   children,
   onIntersect,
+  offset = 0,
 }: ScrollTriggerProps) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -29,7 +31,8 @@ export const ScrollTrigger = ({
   }, [onIntersect]);
 
   return (
-    <Text ta="center" id={id}>
+    <Text ta="center">
+      <Box id={id} pos="absolute" mt={offset} w="10" h="10" />
       {children}
     </Text>
   );
