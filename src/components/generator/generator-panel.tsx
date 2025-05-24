@@ -55,7 +55,7 @@ export const GeneratorPanel = () => {
           >
             <Stack>
               {clip ? (
-                <Viewer loading={false} clip={clip} />
+                <Viewer loading={loading} clip={clip} />
               ) : (
                 <ViewerPlaceholder />
               )}

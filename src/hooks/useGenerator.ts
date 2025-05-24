@@ -17,9 +17,9 @@ export const useGenerator = () => {
 
   useEffect(() => {
     let discarded = false;
+    setLoading(true);
 
-    (async () => {
-      setLoading(true);
+    const timeout = setTimeout(async () => {
       const contextResponse = await api.context(removeEmpty(options));
       if (discarded) {
         return;
@@ -39,6 +39,9 @@ export const useGenerator = () => {
       const clipResponse = await api[options.filetype ?? 'gif'](
         removeEmpty({ ...options, subtitles: options.subtitles ? 1 : 0 })
       );
+      if (discarded) {
+        return;
+      }
       if ('error' in clipResponse) {
         notifications.show({
           title: 'Error generating clip',
@@ -54,13 +57,15 @@ export const useGenerator = () => {
         Math.max(clipResponse.response_time, contextResponse.response_time)
       );
       setLoading(false);
-    })();
+    }, 500);
+
     return () => {
+      clearTimeout(timeout);
       discarded = true;
     };
   }, [JSON.stringify(options), renderIndex]);
 
   const invalidate = () => rerender((i) => i + 1);
 
-  return { clip, context, loading: loading || true, responseTime, invalidate };
+  return { clip, context, loading, responseTime, invalidate };
 };
