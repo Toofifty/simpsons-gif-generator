@@ -110,43 +110,50 @@ export const Context = ({ context, ml }: ContextProps) => {
           setOptions(localRange);
         }}
       >
-        {lines.map(({ id, text }) => (
-          <SliderOption
-            key={id}
-            active={id >= localRange.begin && id < localRange.end}
-          >
-            <Textarea
-              autosize
-              styles={{ input: { border: 'none', lineHeight: 1.5 } }}
-              value={substitutions[id] ?? text.trim().replace('\n', ' ')}
-              variant="filled"
-              disabled={id < localRange.begin || id > localRange.end}
-              onChange={(e) => {
-                setSubstitutions((subs) => ({
-                  ...subs,
-                  [id]: e.target.value === text ? '~' : e.target.value,
-                }));
-              }}
-              rightSection={
-                substitutions[id] ? (
-                  <Tooltip label="Reset custom text">
-                    <ActionIcon
-                      onClick={() => {
-                        setSubstitutions((subs) => {
-                          const copy = { ...subs };
-                          delete copy[id];
-                          return copy;
-                        });
-                      }}
-                    >
-                      <IconX size="14" />
-                    </ActionIcon>
-                  </Tooltip>
-                ) : undefined
-              }
-            />
-          </SliderOption>
-        ))}
+        {lines.map(({ id, text }) => {
+          const active = id >= localRange.begin && id <= localRange.end;
+
+          return (
+            <SliderOption key={id} active={active && id < localRange.end}>
+              <Textarea
+                autosize
+                styles={(theme) => ({
+                  input: {
+                    border: 'none',
+                    lineHeight: 1.5,
+                    padding: theme.spacing.md,
+                  },
+                })}
+                value={substitutions[id] ?? text.trim().replace('\n', ' ')}
+                variant={active ? 'filled' : 'unstyled'}
+                disabled={!active}
+                onChange={(e) => {
+                  setSubstitutions((subs) => ({
+                    ...subs,
+                    [id]: e.target.value === text ? '~' : e.target.value,
+                  }));
+                }}
+                rightSection={
+                  substitutions[id] ? (
+                    <Tooltip label="Reset custom text">
+                      <ActionIcon
+                        onClick={() => {
+                          setSubstitutions((subs) => {
+                            const copy = { ...subs };
+                            delete copy[id];
+                            return copy;
+                          });
+                        }}
+                      >
+                        <IconX size="14" />
+                      </ActionIcon>
+                    </Tooltip>
+                  ) : undefined
+                }
+              />
+            </SliderOption>
+          );
+        })}
       </VerticalSlider>
     </Stack>
   );

@@ -40,8 +40,7 @@ export const GeneratorPanel = () => {
         <Paper
           withBorder
           p="xl"
-          m="xl"
-          mx="lg"
+          my="xl"
           style={{ viewTransitionName: 'main-panel' }}
         >
           {context ? (
@@ -81,8 +80,8 @@ export const GeneratorPanel = () => {
                     {mobileContextOpen ? 'Hide' : 'Show'} subtitle scrubber
                   </Button>
                   <Collapse in={mobileContextOpen}>
-                    {context ? (
-                      <Context ml="lg" context={context} />
+                    {context && mobileContextOpen ? (
+                      <Context context={context} />
                     ) : (
                       <ContextPlaceholder />
                     )}

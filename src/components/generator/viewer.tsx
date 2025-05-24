@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Box,
   Button,
   Image,
@@ -30,34 +31,34 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
   return (
     <Stack align="center">
       <Box
-        mah={270}
-        maw={360}
+        h={270}
+        w={360}
+        maw="100%"
         pos="relative"
         style={{ viewTransitionName: 'main-viewer' }}
       >
-        {filetype === 'mp4' && (
-          <video
-            height="270"
-            width="360"
-            controls
-            loop
-            autoPlay
-            style={{ borderRadius: theme.radius.sm }}
-          >
-            <source src={clip.url} type="video/mp4" />
-            Unable to load video
-          </video>
-        )}
-        {filetype !== 'mp4' && (
-          <Image
-            radius="sm"
-            fit="contain"
-            width="360"
-            height="270"
-            src={clip.url}
-            withPlaceholder
-          />
-        )}
+        <AspectRatio ratio={4 / 3} w={360} maw="100%">
+          {filetype === 'mp4' && (
+            <video
+              controls
+              loop
+              autoPlay
+              style={{ borderRadius: theme.radius.sm }}
+            >
+              <source src={clip.url} type="video/mp4" />
+              Unable to load video
+            </video>
+          )}
+          {filetype !== 'mp4' && (
+            <Image
+              radius="sm"
+              fit="contain"
+              maw="100%"
+              src={clip.url}
+              withPlaceholder
+            />
+          )}
+        </AspectRatio>
         <LoadingOverlay visible={!!loading} overlayBlur={2} />
       </Box>
       <Button.Group>

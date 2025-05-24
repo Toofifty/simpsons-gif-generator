@@ -31,7 +31,7 @@ export default () => {
     <>
       <style>{`body { overflow-y: scroll; overflow-x: hidden; }`}</style>
       <Box mx="auto" maw="calc(1200px + 6.75rem)">
-        <Stack m="xl">
+        <Stack m="xl" mt="0">
           <Flex
             justify="space-between"
             align={isMobile ? 'space-between' : 'center'}
@@ -64,9 +64,10 @@ export default () => {
                   onChange={withTransition(setFiletype) as any}
                 />
               </Flex>
-              <Flex align="center" justify="space-between" gap="md">
+              <Flex align="center" justify="space-between" gap="md" wrap="wrap">
                 <Text>Sorted by</Text>
                 <SegmentedControl
+                  w={isMobile ? '100%' : 'auto'}
                   color="blue"
                   data={[
                     { label: 'Episode', value: 'season' },

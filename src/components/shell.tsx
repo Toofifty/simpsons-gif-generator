@@ -52,8 +52,8 @@ export const Shell = ({ children }: { children: ReactNode }) => {
             justify="space-between"
             align="center"
             sx={(theme) => ({
-              paddingLeft: scroll.y > 0 ? 0 : theme.spacing.xl,
-              paddingRight: scroll.y > 0 ? 0 : theme.spacing.xl,
+              paddingLeft: scroll.y > 0 || isMobile ? 0 : theme.spacing.xl,
+              paddingRight: scroll.y > 0 || isMobile ? 0 : theme.spacing.xl,
               transition: 'padding 0.2s',
             })}
           >

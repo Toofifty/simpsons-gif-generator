@@ -24,7 +24,6 @@ export const SearchInput = forwardRef(
         <TextInput
           ref={ref}
           size="lg"
-          mx="lg"
           value={value}
           onChange={(e) => onChange(e.currentTarget.value)}
           onFocus={onFocus}

@@ -53,9 +53,9 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
         withBorder
         radius="md"
         p="md"
-        m="lg"
+        my="lg"
         w="calc(360px + 2rem)"
-        maw="calc(100% - 2rem)"
+        maw="100%"
         sx={{ viewTransitionName: 'clip-suggestion' }}
       >
         {!quote ? (
@@ -91,7 +91,7 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
               </Flex>
             </UnstyledButton>
             {clip && (
-              <AspectRatio miw={360} ratio={4 / 3}>
+              <AspectRatio w={360} maw="100%" ratio={4 / 3}>
                 <Image
                   src={clip.url}
                   radius="sm"
