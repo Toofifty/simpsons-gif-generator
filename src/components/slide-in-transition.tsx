@@ -1,3 +1,4 @@
+import { Transition } from '@mantine/core';
 import { useEffect, useId, useState } from 'react';
 
 class Queue {
@@ -35,7 +36,7 @@ class Queue {
 const queue = new Queue();
 
 interface SlideInTransitionProps {
-  children: (styles: React.CSSProperties) => React.ReactNode;
+  children: (styles: React.CSSProperties) => React.ReactElement<any, any>;
   skip?: boolean;
 }
 
