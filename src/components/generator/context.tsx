@@ -1,5 +1,7 @@
 import {
   ActionIcon,
+  Flex,
+  Skeleton,
   SpacingValue,
   Stack,
   SystemProp,
@@ -149,3 +151,24 @@ export const Context = ({ context, ml }: ContextProps) => {
     </Stack>
   );
 };
+
+export const ContextPlaceholder = ({
+  ml,
+}: {
+  ml?: SystemProp<SpacingValue>;
+}) => (
+  <Flex gap="xs" w="100%" h="100%" ml={ml}>
+    <Skeleton w={12} m="xs" radius="lg" />
+    <Stack spacing="2px" sx={{ flexGrow: 1 }}>
+      {Array.from({ length: 14 }).map((_, i) => (
+        <Skeleton
+          key={i}
+          height={i % 2 === 0 ? 40 : 60}
+          width="100%"
+          radius="md"
+          opacity={i >= 4 && i <= 7 ? 1 : 0.5}
+        />
+      ))}
+    </Stack>
+  </Flex>
+);

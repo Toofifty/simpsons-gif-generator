@@ -34,9 +34,10 @@ interface SearchResultProps {
     thumbnail: string;
   };
   first?: boolean;
+  onClick: () => void;
 }
 
-export const SearchResult = ({ result, first }: SearchResultProps) => {
+export const SearchResult = ({ result, first, onClick }: SearchResultProps) => {
   const { setRangeWithTransition, setOptionsWithTransition } =
     useOptionsContext();
 
@@ -138,6 +139,7 @@ export const SearchResult = ({ result, first }: SearchResultProps) => {
               result.lines[result.lines.length - 1].id
             );
           }
+          onClick();
         }}
       >
         <Flex

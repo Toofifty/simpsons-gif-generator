@@ -6,6 +6,7 @@ import {
   Checkbox,
   Flex,
   Input,
+  Skeleton,
   Slider,
   Stack,
   Text,
@@ -16,6 +17,7 @@ import { useState } from 'react';
 import { QuoteContextResponseData } from '../../api';
 import { useOptionsContext } from '../../hooks/useOptionsContext';
 import { SubmitCorrection } from './submit-correction';
+import { range } from '@mantine/hooks';
 
 const TIME_MARKS = [
   { value: -5, label: '-5s' },
@@ -177,3 +179,20 @@ export const Controls = ({ context }: ControlsProps) => {
     </Stack>
   );
 };
+
+export const ControlsPlaceholder = () => (
+  <Stack>
+    <Flex justify="space-between" align="center">
+      <Skeleton height={20} width={120} radius="lg" />
+      <Skeleton height={36} width={128} />
+    </Flex>
+    <Skeleton height={16} width={150} radius="lg" mb="xs" />
+    {range(0, 2).map((i) => (
+      <Flex key={i} direction="column" gap=".5rem">
+        <Skeleton height={16} width={100} radius="lg" />
+        <Skeleton height={12} width={240} radius="lg" />
+        <Skeleton height={36} width="100%" radius="md" />
+      </Flex>
+    ))}
+  </Stack>
+);

@@ -3,6 +3,7 @@ import {
   Button,
   Image,
   LoadingOverlay,
+  Skeleton,
   Stack,
   Tooltip,
   useMantineTheme,
@@ -89,3 +90,17 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
     </Stack>
   );
 };
+
+export const ViewerPlaceholder = () => (
+  <Stack align="center">
+    <Box
+      mah={270}
+      maw={360}
+      pos="relative"
+      style={{ viewTransitionName: 'main-viewer' }}
+    >
+      <Skeleton width={360} height={270} radius="sm" />
+    </Box>
+    <Skeleton width={325} height={36} />
+  </Stack>
+);

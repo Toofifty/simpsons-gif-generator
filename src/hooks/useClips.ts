@@ -15,7 +15,7 @@ export const useClips = (
         sort_by: sort === 'recent' ? 'created_at' : 'views',
       }),
     dependencies: [filetype, sort],
-    limit: 12,
+    limit: 16,
     errorMessage: "Couldn't fetch published clips",
   });
 

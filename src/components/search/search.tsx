@@ -38,6 +38,7 @@ export const Search = ({ value, onChange }: SearchProps) => {
           loading={loading}
           results={results}
           onNext={fetchMore}
+          onClick={() => setSearchFocused(false)}
         />
       </Popover.Dropdown>
     </Popover>

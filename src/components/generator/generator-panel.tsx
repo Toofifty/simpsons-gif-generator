@@ -5,70 +5,32 @@ import {
   Divider,
   Flex,
   Paper,
+  Skeleton,
   Stack,
   Text,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import {
-  IconChevronDown,
-  IconChevronRight,
-  IconChevronUp,
-} from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useGenerator } from '../../hooks/useGenerator';
 import { GeneratorContext } from '../../hooks/useGeneratorContext';
-import { Context } from './context';
-import { Controls } from './controls';
-import { Viewer } from './viewer';
-import { EpisodeTitle, getIdentifier } from '../episode-title';
-import { ClipResponseData, QuoteContextResponseData } from '../../api';
-import { NavLink } from 'react-router-dom';
+import { Context, ContextPlaceholder } from './context';
+import { Controls, ControlsPlaceholder } from './controls';
+import { Viewer, ViewerPlaceholder } from './viewer';
+import {
+  GeneratorHeader,
+  GeneratorHeaderPlaceholder,
+} from './generator-header';
+import { useState } from 'react';
 
 export const GeneratorPanel = () => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
-  const {
-    context: loadedContext,
-    clip: loadedClip,
-    loading,
-    responseTime,
-    invalidate,
-  } = useGenerator();
+  const { context, clip, loading, responseTime, invalidate } = useGenerator();
 
   const [mobileContextOpen, { toggle: toggleMobileContext }] =
     useDisclosure(false);
-
-  const context =
-    loadedContext ??
-    ({
-      meta: {
-        episode_title: '',
-        season_number: 0,
-        episode_number: 0,
-        episode_in_season: 0,
-        season_title: '',
-      },
-      matches: {
-        before: [{ episode_id: 0, id: 0, text: '' } as any],
-        lines: [],
-        after: [],
-      },
-    } satisfies QuoteContextResponseData);
-  const clip =
-    loadedClip ??
-    ({
-      cached: false,
-      clip_copies: 0,
-      clip_uuid: '',
-      clip_views: 0,
-      generation_copies: 0,
-      generation_uuid: '',
-      generation_views: 0,
-      render_time: 0,
-      url: '',
-      subtitle_correction: 0,
-    } satisfies ClipResponseData);
 
   return (
     <GeneratorContext.Provider
@@ -82,35 +44,22 @@ export const GeneratorPanel = () => {
           mx="lg"
           style={{ viewTransitionName: 'main-panel' }}
         >
-          <Flex gap="sm" justify="space-between">
-            <EpisodeTitle
-              identifier={
-                context
-                  ? getIdentifier(
-                      context.meta.season_number,
-                      context.meta.episode_number
-                    )
-                  : 'S00E00'
-              }
-              title={context?.meta.episode_title ?? ''}
-            />
-            <Button
-              variant="default"
-              color="gray"
-              rightIcon={<IconChevronRight />}
-              component={NavLink}
-              to={`/browse/season/${context.meta.season_number}`}
-            >
-              Browse season {context.meta.season_number}
-            </Button>
-          </Flex>
+          {context ? (
+            <GeneratorHeader meta={context.meta} />
+          ) : (
+            <GeneratorHeaderPlaceholder />
+          )}
           <Flex
             my="lg"
-            mah={isMobile ? undefined : 800}
+            h={isMobile ? undefined : 800}
             direction={isMobile ? 'column' : undefined}
           >
             <Stack>
-              <Viewer loading={false} clip={clip} />
+              {clip ? (
+                <Viewer loading={false} clip={clip} />
+              ) : (
+                <ViewerPlaceholder />
+              )}
               <Divider my="lg" mb={isMobile ? 'sm' : undefined} />
               {isMobile && (
                 <>
@@ -132,22 +81,34 @@ export const GeneratorPanel = () => {
                     {mobileContextOpen ? 'Hide' : 'Show'} subtitle scrubber
                   </Button>
                   <Collapse in={mobileContextOpen}>
-                    <Context
-                      key={mobileContextOpen ? 'trigger' : 'rerender'}
-                      context={context}
-                    />
+                    {context ? (
+                      <Context ml="lg" context={context} />
+                    ) : (
+                      <ContextPlaceholder />
+                    )}
                     <Divider my="xl" />
                   </Collapse>
                 </>
               )}
-              <Controls context={context} />
+              {context ? (
+                <Controls context={context} />
+              ) : (
+                <ControlsPlaceholder />
+              )}
             </Stack>
-            {!isMobile && <Context ml="lg" context={context} />}
+            {!isMobile &&
+              (context ? (
+                <Context ml="lg" context={context} />
+              ) : (
+                <ContextPlaceholder ml="lg" />
+              ))}
           </Flex>
-          {!!responseTime && (
+          {context && !!responseTime ? (
             <Text fz="sm" color="dimmed">
               Generated in {responseTime}ms
             </Text>
+          ) : (
+            <Skeleton width={120} height={20} radius="lg" />
           )}
         </Paper>
       </Box>

@@ -22,7 +22,7 @@ export const useClipsBySeason = (filetype: 'gif' | 'mp4', season: number) => {
         order: 'asc',
       }),
     dependencies: [filetype, season],
-    limit: 12,
+    limit: 16,
     errorMessage: "Couldn't fetch published clips",
   });
 

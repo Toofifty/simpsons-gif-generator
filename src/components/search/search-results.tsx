@@ -19,11 +19,12 @@ interface SearchResultsProps {
   results?: SearchQuoteResponseData;
   error?: string;
   onNext: () => void;
+  onClick: () => void;
 }
 
 export const SearchResults = forwardRef(
   (
-    { loading, term, results, error, onNext }: SearchResultsProps,
+    { loading, term, results, error, onNext, onClick }: SearchResultsProps,
     ref: ForwardedRef<HTMLDivElement>
   ) => {
     if (results === undefined && (term?.length ?? 0) < 5) {
@@ -85,6 +86,7 @@ export const SearchResults = forwardRef(
                   first={i === 0}
                   key={result.clip.uuid}
                   result={result}
+                  onClick={onClick}
                 />
               ))}
               <Divider w="100%" />
@@ -108,6 +110,7 @@ export const SearchResults = forwardRef(
               first={i === 0}
               key={result.lines[0].id + i * 0xdeadbeef}
               result={result}
+              onClick={onClick}
             />
           ))}
           {totalMatches < results.total_results && (
