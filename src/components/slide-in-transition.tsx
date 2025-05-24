@@ -68,9 +68,7 @@ export const SlideInTransition = ({
 
   useEffect(() => {
     queue.enqueue(key, () => {
-      setStyle({
-        animation: `slide-in 250ms ease-out forwards`,
-      });
+      setStyle({ animation: `slide-in 250ms` });
     });
 
     return () => {
