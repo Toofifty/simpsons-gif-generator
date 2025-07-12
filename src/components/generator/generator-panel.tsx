@@ -21,7 +21,6 @@ import {
   GeneratorHeader,
   GeneratorHeaderPlaceholder,
 } from './generator-header';
-import { useState } from 'react';
 
 export const GeneratorPanel = () => {
   const theme = useMantineTheme();
@@ -41,6 +40,7 @@ export const GeneratorPanel = () => {
           withBorder
           p="xl"
           my="xl"
+          radius="lg"
           style={{ viewTransitionName: 'main-panel' }}
         >
           {context ? (

@@ -55,6 +55,7 @@ export interface QuoteContextResponseData {
 
 export interface SearchQuoteRequest {
   term: string;
+  semantic?: boolean;
   offset?: number;
   limit?: number;
 }

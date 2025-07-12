@@ -45,9 +45,12 @@ export const PreviewActions = ({
   return (
     <Group spacing="xs">
       {toggleTranscript && (
-        <Tooltip label={showTranscript ? 'Hide transcript' : 'Show transcript'}>
+        <Tooltip
+          label={showTranscript ? 'Hide transcript' : 'Show transcript'}
+          radius="md"
+        >
           <ActionIcon
-            variant={showTranscript ? 'filled' : 'light'}
+            variant={showTranscript ? 'filled' : 'default'}
             radius="md"
             onClick={toggleTranscript}
           >
@@ -55,9 +58,9 @@ export const PreviewActions = ({
           </ActionIcon>
         </Tooltip>
       )}
-      <Tooltip label="Edit">
+      <Tooltip label="Edit" radius="md">
         <ActionIcon
-          variant="light"
+          variant="default"
           radius="md"
           component={NavLink}
           to={getLink(clip)}
@@ -68,6 +71,7 @@ export const PreviewActions = ({
       </Tooltip>
       <Tooltip
         label={copied ? 'Copied!' : `Copy ${filetype.toUpperCase()} URL`}
+        radius="md"
       >
         <ActionIcon variant="light" color="blue" radius="md" onClick={onCopy}>
           <IconCopy size="16" />

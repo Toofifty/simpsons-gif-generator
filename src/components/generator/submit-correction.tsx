@@ -1,4 +1,4 @@
-import { Button, Modal, Stack, Text, TextInput } from '@mantine/core';
+import { Button, Modal, Paper, Stack, Text, TextInput } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { api, QuoteContextResponseData } from '../../api';
@@ -48,15 +48,19 @@ export const SubmitCorrection = ({
       onClose={onClose}
       title="Submit correction"
       centered
+      radius="lg"
     >
       <Stack>
-        <Text>Correction: {correction?.toFixed(2)}s</Text>
+        <Paper withBorder p="md" radius="lg">
+          <Text>Correction: {correction?.toFixed(2)}s</Text>
+        </Paper>
         <TextInput
           label="Passcode"
           name="passcode"
           required
           value={passcode}
           onChange={setPasscode}
+          radius="md"
         />
         <Text color="dimmed">
           Submitting a correction of{' '}
@@ -75,6 +79,7 @@ export const SubmitCorrection = ({
           variant="filled"
           disabled={!passcode}
           onClick={submit}
+          radius="md"
         >
           Submit
         </Button>

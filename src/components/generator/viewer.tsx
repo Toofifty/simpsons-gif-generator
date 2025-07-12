@@ -51,7 +51,7 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
           )}
           {filetype !== 'mp4' && (
             <Image
-              radius="sm"
+              radius="md"
               fit="contain"
               maw="100%"
               src={clip.url}
@@ -66,6 +66,7 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
           variant="default"
           leftIcon={<IconDownload />}
           onClick={clip ? () => download(clip.url) : undefined}
+          radius="md"
         >
           Download {filetype.toLocaleUpperCase()}
         </Button>
@@ -83,6 +84,7 @@ export const Viewer = ({ loading, clip }: ViewerProps) => {
             }}
             variant="default"
             leftIcon={<IconCopy />}
+            radius="md"
           >
             Copy {filetype.toLocaleUpperCase()} URL
           </Button>

@@ -13,9 +13,8 @@ export const EpisodeTitle = ({
 }: {
   identifier: string;
   title: string;
-  style?: React.CSSProperties;
 } & MantineStyleSystemProps) => (
-  <Group align="center" {...props}>
+  <Group align="center" {...props} style={{ viewTransitionName: identifier }}>
     <Badge variant="filled">{identifier.toUpperCase()}</Badge>
     <Title size="medium">{title}</Title>
   </Group>

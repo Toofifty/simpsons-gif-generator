@@ -117,7 +117,7 @@ export const SearchResult = ({ result, first, onClick }: SearchResultProps) => {
         px="lg"
         py="sm"
         sx={(theme) => ({
-          borderRadius: theme.radius.sm,
+          borderRadius: theme.radius.md,
           ':hover': {
             backgroundColor:
               theme.colorScheme === 'dark'

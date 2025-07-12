@@ -16,6 +16,7 @@ import { SliderOption } from '../vertical-slider/slider-option';
 import { VerticalSlider } from '../vertical-slider/vertical-slider';
 import { useEffect, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
+import { scrollbarStyle } from '../../util/scrollbar-style';
 
 interface ContextProps {
   context: QuoteContextResponseData;
@@ -74,11 +75,12 @@ export const Context = ({ context, ml }: ContextProps) => {
   return (
     <Stack
       ml={ml}
-      sx={{
+      sx={(theme) => ({
         maxHeight: '100%',
         overflow: 'auto',
         flex: 1,
-      }}
+        ...scrollbarStyle(theme),
+      })}
     >
       <VerticalSlider
         startIndex={localRange.begin - firstRenderedId}
@@ -112,20 +114,30 @@ export const Context = ({ context, ml }: ContextProps) => {
       >
         {lines.map(({ id, text }) => {
           const active = id >= localRange.begin && id <= localRange.end;
+          const firstActive = id === localRange.begin;
+          const lastActive = id === localRange.end;
 
           return (
             <SliderOption key={id} active={active && id < localRange.end}>
               <Textarea
                 autosize
                 styles={(theme) => ({
+                  root: {
+                    paddingBottom: 0,
+                  },
                   input: {
                     border: 'none',
                     lineHeight: 1.5,
                     padding: theme.spacing.md,
+                    borderTopLeftRadius: firstActive ? theme.radius.lg : 0,
+                    borderTopRightRadius: firstActive ? theme.radius.lg : 0,
+                    borderBottomLeftRadius: lastActive ? theme.radius.lg : 0,
+                    borderBottomRightRadius: lastActive ? theme.radius.lg : 0,
+                    background: active ? undefined : 'transparent !important',
                   },
                 })}
                 value={substitutions[id] ?? text.trim().replace('\n', ' ')}
-                variant={active ? 'filled' : 'unstyled'}
+                variant={active ? 'filled' : 'default'}
                 disabled={!active}
                 onChange={(e) => {
                   setSubstitutions((subs) => ({

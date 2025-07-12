@@ -29,6 +29,7 @@ export const GeneratorHeader = ({ meta }: { meta: MetaBundle }) => {
         component={NavLink}
         to={`/browse/season/${meta.season_number}`}
         fullWidth={isMobile}
+        radius="md"
       >
         Browse season {meta.season_number}
       </Button>

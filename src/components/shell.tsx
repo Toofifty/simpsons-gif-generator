@@ -2,10 +2,12 @@ import {
   ActionIcon,
   Anchor,
   AppShell,
+  Button,
   Flex,
   Header,
   Image,
   Text,
+  UnstyledButton,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
@@ -23,22 +25,24 @@ export const Shell = ({ children }: { children: ReactNode }) => {
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [scroll] = useWindowScroll();
 
+  const scrolled = scroll.y > 0;
+
   return (
     <AppShell
       header={
         <Header
           height={96}
           p="lg"
-          withBorder={scroll.y > 0}
+          withBorder={scrolled}
           styles={(theme) => ({
             root: {
-              height: scroll.y > 0 ? 64 : 96,
+              height: scrolled ? 64 : 96,
               backgroundColor:
                 theme.colorScheme === 'dark'
-                  ? scroll.y > 0
+                  ? scrolled
                     ? theme.colors.dark[7]
                     : theme.colors.dark[5]
-                  : scroll.y > 0
+                  : scrolled
                   ? theme.white
                   : theme.colors.gray[0],
               zIndex: 300,
@@ -57,18 +61,19 @@ export const Shell = ({ children }: { children: ReactNode }) => {
               transition: 'padding 0.2s',
             })}
           >
-            <Flex gap="xl">
-              <Anchor
+            <Flex gap="xl" align="center">
+              <UnstyledButton
                 component={NavLink}
                 to="/"
                 color="#ff0"
                 fw="bold"
                 viewTransition
               >
-                <Flex gap="sm">
+                <Flex gap="sm" align="center">
                   <Image src={Logo} width="60" />
                   <Text
                     sx={() => ({
+                      color: '#ff0',
                       WebkitFontSmoothing: 'antialiased',
                       textShadow: '0 0 1px #000,'.repeat(20).replace(/,$/, ''),
                     })}
@@ -76,43 +81,49 @@ export const Shell = ({ children }: { children: ReactNode }) => {
                     Linguo
                   </Text>
                 </Flex>
-              </Anchor>
-              <Anchor
+              </UnstyledButton>
+              <Button
+                variant="default"
                 component={NavLink}
                 to="/browse/recent"
-                color="gray"
                 viewTransition
+                radius="lg"
               >
                 Browse
-              </Anchor>
+              </Button>
             </Flex>
-            <Flex gap="xl" justify="flex-end" align="center">
+            <Flex gap="xs" justify="flex-end" align="center">
               {!isMobile && (
                 <>
-                  <Anchor
+                  <Button
+                    variant="default"
+                    component="a"
                     href="https://github.com/toofifty/simpsons-gif-generator"
-                    color="gray"
+                    radius="lg"
                   >
                     Source
-                  </Anchor>
-                  <Anchor
+                  </Button>
+                  <Button
+                    variant="default"
+                    component="a"
                     href="https://github.com/toofifty/simpsons-api"
-                    color="gray"
+                    radius="lg"
                   >
                     API
-                  </Anchor>
+                  </Button>
                 </>
               )}
               <ActionIcon
-                variant="subtle"
-                color="gray"
+                variant="default"
                 onClick={() => toggleColorScheme()}
                 title="Toggle color scheme"
+                size={scrolled ? 'lg' : 'xl'}
+                radius="lg"
               >
                 {dark ? (
-                  <IconSun size="1.1rem" />
+                  <IconSun size="1.2rem" />
                 ) : (
-                  <IconMoonStars size="1.1rem" />
+                  <IconMoonStars size="1.2rem" />
                 )}
               </ActionIcon>
             </Flex>

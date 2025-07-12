@@ -63,11 +63,13 @@ export const Controls = ({ context }: ControlsProps) => {
         <Flex align="center" gap="sm">
           <Tooltip
             label={(showAdvanced ? 'Hide' : 'Show') + ' advanced options'}
+            radius="md"
           >
             <ActionIcon
               variant={showAdvanced ? 'filled' : 'subtle'}
               color={showAdvanced ? 'blue' : 'gray'}
               size="lg"
+              radius="md"
               onClick={() => setShowAdvanced((v) => !v)}
             >
               <IconSettings size="1.25rem" />
@@ -78,6 +80,7 @@ export const Controls = ({ context }: ControlsProps) => {
               variant={filetype === 'mp4' ? 'filled' : 'default'}
               size="sm"
               onClick={() => setOption('filetype', 'mp4')}
+              radius="md"
             >
               MP4
             </Button>
@@ -85,6 +88,7 @@ export const Controls = ({ context }: ControlsProps) => {
               variant={filetype === 'gif' ? 'filled' : 'default'}
               size="sm"
               onClick={() => setOption('filetype', 'gif')}
+              radius="md"
             >
               GIF
             </Button>

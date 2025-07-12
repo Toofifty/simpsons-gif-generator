@@ -38,9 +38,15 @@ export const PreviewCard = ({ filetype, clip, style }: PreviewCardProps) => {
     <Paper
       withBorder
       w={isSmall ? '100%' : isMedium ? 'calc(50% - 0.75rem)' : 300}
-      radius="md"
+      radius="lg"
       miw="300px"
-      style={{ ...style, ...vt('main-panel') }}
+      style={{
+        ...style,
+        ...vt('main-panel'),
+        borderBottomLeftRadius: showTranscript ? 0 : undefined,
+        borderBottomRightRadius: showTranscript ? 0 : undefined,
+        transition: 'border-radius 200ms',
+      }}
     >
       <Stack
         spacing={0}
@@ -70,19 +76,26 @@ export const PreviewCard = ({ filetype, clip, style }: PreviewCardProps) => {
         </Box>
         <Transition
           mounted={showTranscript}
-          transition="fade"
+          transition="scale-y"
           duration={200}
           timingFunction="ease"
         >
           {(styles) => (
             <Paper
               pos="absolute"
-              w="100%"
-              top="calc(100% - 0.5rem)"
+              radius="lg"
+              w="calc(100% + 1.8px)"
+              left="-1px"
+              top="100%"
               withBorder
               p="sm"
               style={styles}
-              sx={{ zIndex: 1000 }}
+              sx={{
+                zIndex: 2,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                borderTop: 'none !important',
+              }}
             >
               <PreviewSubtitles subtitles={clip.subtitles} max={8} />
             </Paper>

@@ -7,7 +7,7 @@ interface GifPreviewProps {
 }
 
 export const GifPreview = ({ clip, style }: GifPreviewProps) => (
-  <Paper radius="sm" pos="relative" sx={{ overflow: 'hidden' }}>
+  <Paper radius="md" pos="relative" sx={{ overflow: 'hidden' }}>
     <AspectRatio ratio={4 / 3}>
       <Image src={clip.url} style={style} />
     </AspectRatio>
@@ -20,7 +20,7 @@ export const GifPreview = ({ clip, style }: GifPreviewProps) => (
         right: '0.5rem',
         pointerEvents: 'none',
         boxShadow: theme.shadows.xs,
-        zIndex: 50,
+        zIndex: 1,
       })}
     >
       GIF

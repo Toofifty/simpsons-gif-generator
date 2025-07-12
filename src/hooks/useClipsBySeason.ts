@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { api } from '../api';
 import { usePaginatedRequest } from './usePaginatedRequest';
 import { useCachedRequest } from './useCachedRequest';
+import { uniqueBy } from '../utils';
 
 export const useClipsBySeason = (filetype: 'gif' | 'mp4', season: number) => {
   const {
@@ -43,7 +44,12 @@ export const useClipsBySeason = (filetype: 'gif' | 'mp4', season: number) => {
         .filter((episode) => episode.seasonId === season)
         .map((episode) => ({
           ...episode,
-          clips: clips.filter((clip) => clip.episode_id === episode.id),
+          clips: uniqueBy(
+            clips
+              .filter((clip) => clip.episode_id === episode.id)
+              .sort((a, b) => a.options.begin - b.options.begin),
+            'clip_uuid'
+          ),
         }))
         .filter((episode) => episode.clips.length > 0),
     [episodes, clips, season]

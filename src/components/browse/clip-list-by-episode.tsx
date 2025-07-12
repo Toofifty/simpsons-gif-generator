@@ -1,5 +1,6 @@
 import {
   Anchor,
+  Box,
   Flex,
   Group,
   Loader,
@@ -26,6 +27,7 @@ import {
   matchesGenerator,
   useRRViewTransition,
 } from '../../hooks/useRRViewTransition';
+import { CustomSegmentedControl } from '../custom-segmented-control';
 
 interface ClipListByEpisodeProps {
   filetype: 'gif' | 'mp4';
@@ -76,11 +78,11 @@ export const ClipListByEpisode = ({ filetype }: ClipListByEpisodeProps) => {
           />
         </Flex>
       ) : (
-        <SegmentedControl
+        <CustomSegmentedControl
           mt="-lg"
           mb="lg"
           color="blue"
-          fullWidth
+          w="100%"
           data={range(1, 17).map((id) => ({
             label: `S${id}`,
             value: String(id),
@@ -144,7 +146,7 @@ const EpisodeBox = ({
   return (
     <Paper
       key={episode.id}
-      radius="md"
+      radius="lg"
       p="md"
       mx="-md"
       w="calc(100% + 2rem)"
@@ -152,12 +154,20 @@ const EpisodeBox = ({
       withBorder={colorScheme === 'light'}
       style={style}
     >
-      <EpisodeTitle
-        identifier={episode.identifier}
-        title={episode.title}
-        ml="sm"
-        mb="md"
-      />
+      <Paper
+        radius="lg"
+        style={{ position: 'sticky', top: 64, zIndex: 5 }}
+        bg={colorScheme === 'dark' ? 'dark.6' : 'gray.1'}
+        p="md"
+        m="-md"
+        mb="0"
+      >
+        <EpisodeTitle
+          identifier={episode.identifier}
+          title={episode.title}
+          ml="sm"
+        />
+      </Paper>
       <Flex wrap="wrap" gap="lg" sx={{ overflow: 'visible' }}>
         {episode.clips.map((clip) => (
           <PreviewCard key={clip.clip_uuid} filetype={filetype} clip={clip} />

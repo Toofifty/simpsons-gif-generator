@@ -18,7 +18,7 @@ export const MP4Preview = ({ clip }: MP4PreviewProps) => {
   const [play, setPlay] = useState(false);
 
   return (
-    <Paper radius="sm" pos="relative" sx={{ overflow: 'hidden' }}>
+    <Paper radius="md" pos="relative" sx={{ overflow: 'hidden' }}>
       <AspectRatio ratio={4 / 3}>
         {play ? (
           <video width="100%" autoPlay controls onEnded={() => setPlay(false)}>
@@ -50,7 +50,7 @@ export const MP4Preview = ({ clip }: MP4PreviewProps) => {
                   right: '0.5rem',
                   pointerEvents: 'none',
                   boxShadow: theme.shadows.xs,
-                  zIndex: 50,
+                  zIndex: 1,
                 })}
               >
                 MP4

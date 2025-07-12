@@ -17,6 +17,7 @@ import { Fragment } from 'react';
 // remove all non-alphanumeric characters
 const normalize = (str: string) =>
   str
+    .replace('\n', ' ')
     .replace(/[^a-zA-Z0-9 ]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
@@ -38,7 +39,12 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
         <Text color={theme.colorScheme === 'dark' ? 'dark.2' : 'gray'}>
           Start searching for a quote, like:
         </Text>
-        <ActionIcon variant="subtle" size="xl" onClick={() => fetchRandom()}>
+        <ActionIcon
+          variant="default"
+          size="xl"
+          radius="lg"
+          onClick={() => fetchRandom()}
+        >
           {loading ? (
             <Loader
               color={colorScheme === 'dark' ? 'white' : 'gray'}
@@ -51,7 +57,7 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
       </Flex>
       <Paper
         withBorder
-        radius="md"
+        radius="lg"
         p="md"
         my="lg"
         w="calc(360px + 2rem)"
@@ -94,7 +100,7 @@ export const ClipSuggestion = ({ setSearchValue }: ClipSuggestionProps) => {
               <AspectRatio w={360} maw="100%" ratio={4 / 3}>
                 <Image
                   src={clip.url}
-                  radius="sm"
+                  radius="md"
                   sx={{ viewTransitionName: 'clip-suggestion-clip' }}
                 />
               </AspectRatio>

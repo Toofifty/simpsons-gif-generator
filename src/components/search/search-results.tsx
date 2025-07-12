@@ -12,6 +12,7 @@ import { SearchQuoteResponseData } from '../../api';
 import { SearchResult } from './search-result';
 import { ScrollTrigger } from '../scroll-trigger';
 import { IconScissors, IconSearch } from '@tabler/icons-react';
+import { scrollbarStyle } from '../../util/scrollbar-style';
 
 interface SearchResultsProps {
   loading?: boolean;
@@ -67,10 +68,18 @@ export const SearchResults = forwardRef(
         mah="calc(100vh - 200px)"
         sx={{ opacity: loading ? 0.5 : 1 }}
       >
-        <Stack style={{ overflowY: 'auto' }} mah={580} align="center">
+        <Stack
+          sx={(theme) => ({
+            overflowY: 'auto',
+            ...scrollbarStyle(theme),
+          })}
+          mah={660}
+          align="center"
+          spacing="0"
+        >
           {results.clip_matches.length > 0 && (
             <>
-              <Flex>
+              <Flex pb="md">
                 <Badge
                   leftSection={
                     <ActionIcon color="blue" size="xs" variant="transparent">
@@ -89,11 +98,11 @@ export const SearchResults = forwardRef(
                   onClick={onClick}
                 />
               ))}
-              <Divider w="100%" />
+              <Divider w="100%" my="md" />
             </>
           )}
           {results.clip_matches.length > 0 && (
-            <Flex>
+            <Flex pb="md">
               <Badge
                 leftSection={
                   <ActionIcon color="blue" size="xs" variant="transparent">
@@ -115,7 +124,7 @@ export const SearchResults = forwardRef(
           ))}
           {totalMatches < results.total_results && (
             <ScrollTrigger id="search-scroll-trigger" onIntersect={onNext}>
-              <Loader />
+              <Loader my="md" />
             </ScrollTrigger>
           )}
         </Stack>
